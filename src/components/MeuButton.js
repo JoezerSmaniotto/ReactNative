@@ -1,11 +1,12 @@
 import React from 'react';
 import {Text, StyleSheet, TouchableHighlight} from 'react-native';
+import {COLORS} from '../assets/colors';
 
 function MeuButton(props) {
   console.log(props);
   return (
     <TouchableHighlight style={styles.button} onPress={() => props.onClick()}>
-      <Text>{props.texto}</Text>
+      <Text style={styles.text}>{props.texto}</Text>
     </TouchableHighlight>
   );
 }
@@ -13,13 +14,18 @@ function MeuButton(props) {
 export default MeuButton;
 
 const styles = StyleSheet.create({
-  texto: {
-    fontSize: 30,
+  text: {
+    fontSize: 20,
+    color: COLORS.white,
   },
   button: {
+    width: '95%',
+    height: 50,
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffe51f',
+    backgroundColor: COLORS.accent,
     padding: 10,
     margin: 10,
+    borderRadius: 5,
   },
 });

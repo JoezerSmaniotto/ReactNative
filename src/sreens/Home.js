@@ -4,23 +4,23 @@ import MeuButton from '../components/MeuButton';
 
 // import { Container } from './styles';
 
-const Home = () => {
+const Home = props => {
   const [contador, setContado] = useState(0);
-
+  console.log(props);
   // 1. Montagem do Component.
-  useEffect(() => {
-    console.log('Montou o Componente');
-  }, []);
+  // useEffect(() => {
+  //   console.log('Montou o Componente');
+  // }, []);
 
   // 2. A cada atualização do component, se alterar um state dento dele, qualquer coisa.
-  useEffect(() => {
-    console.log('Fez update Componente');
-  });
+  // useEffect(() => {
+  //   console.log('Fez update Componente');
+  // });
 
   // 3. A cada atualização do que estiver dentro do array dependencias sera atualizado, renderizado.
-  useEffect(() => {
-    console.log('Fez update baseado em contador');
-  }, [contador]);
+  // useEffect(() => {
+  //   console.log('Fez update baseado em contador');
+  // }, [contador]);
 
   const contar = () => {
     setContado(contador + 1);
