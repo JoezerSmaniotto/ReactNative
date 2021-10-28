@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -7,21 +7,65 @@ import {
   Text,
   Image,
   TextInput,
+  Alert,
 } from 'react-native';
 import MeuButton from '../components/MeuButton';
 import {COLORS} from '../assets/colors';
+import auth from '@react-native-firebase/auth';
+import {CommonActions} from '@react-navigation/routers';
 
-const SignIn = props => {
+const SignIn = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [pass, setPass] = useState('');
+  console.log(auth);
   const recuperarSenha = () => {
-    alert('Abrir modal recuperar senha');
+    navigation.navigate('ForgotPassWord');
   };
 
   const entrar = () => {
-    alert('logar no sistema');
+    console.log(`Email: ${email}  --- Senha: ${pass}`);
+    if (email !== '' && pass !== '') {
+      auth()
+        .signInWithEmailAndPassword(email, pass)
+        .then(() => {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: 'Home'}],
+            }),
+          );
+          // setEmail('');
+          // setPass('');
+        })
+        .catch(e => {
+          console.log('SignIn: erro em entrar: ' + e);
+          switch (e.code) {
+            case 'auth/user-not-found':
+              Alert.alert('Erro', 'Usuário não cadastrado.');
+              break;
+            case 'auth/wrong-password':
+              Alert.alert('Erro', 'Erro na senha.');
+              break;
+            case 'auth/invalid-email':
+              Alert.alert('Erro', 'Email inválido.');
+              break;
+            case 'auth/user-disabled':
+              Alert.alert('Erro', 'Usuário desabilitado.');
+              break;
+          }
+        });
+    } else {
+      Alert.alert('Erro', 'Por favor preencha os campos de email ou senha!');
+    }
   };
 
   const cadastrar = () => {
-    alert('Vai para a screen SignUp');
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'SignUp'}],
+      }),
+    );
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -32,8 +76,25 @@ const SignIn = props => {
             source={require('../assets/images/logo.png')}
             accessibilityLabel="logo do app"
           />
-          <TextInput style={styles.input} />
-          <TextInput style={styles.input} />
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            returnKeyType="next"
+            onChangeText={t => setEmail(t)}
+            onEndEditing={() => this.passTextInput.focus()}
+          />
+          <TextInput
+            ref={ref => {
+              this.passTextInput = ref; // recebe a referencia
+            }}
+            style={styles.input}
+            secureTextEntry={true}
+            placeholder="Senha"
+            keyboardType="default"
+            returnKeyType="go"
+            onChangeText={t => setPass(t)}
+          />
           <Text style={styles.textEsqueceuSenha} onPress={recuperarSenha}>
             Esqueceu sua senha?
           </Text>
