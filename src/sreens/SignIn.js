@@ -68,7 +68,10 @@ const SignIn = ({navigation}) => {
     );
   };
   return (
+    // SafeAreaView resolve o problema quando clica em um input sobe  a view sw baixo sobre ele
     <SafeAreaView style={styles.container}>
+      {/* Tanto o SafeAreaView com o ScrollView funcionam para resolver o
+      problema descrito. */}
       <ScrollView>
         <View style={styles.divSuperior}>
           <Image
@@ -85,9 +88,9 @@ const SignIn = ({navigation}) => {
             onEndEditing={() => this.passTextInput.focus()}
           />
           <TextInput
-            ref={ref => {
-              this.passTextInput = ref; // recebe a referencia
-            }}
+            // ref={ref => {
+            //   this.passTextInput = ref; // recebe a referencia
+            // }}
             style={styles.input}
             secureTextEntry={true}
             placeholder="Senha"
@@ -130,11 +133,13 @@ const styles = StyleSheet.create({
   divSuperior: {
     flex: 5,
     alignItems: 'center',
+    // backgroundColor: 'red',
   },
   divInferior: {
     flex: 1,
     alignItems: 'center',
     marginTop: 20,
+    // backgroundColor: 'yellow',
   },
   image: {
     width: 150,
