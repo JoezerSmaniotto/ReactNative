@@ -44,7 +44,7 @@ const signInStyle = {
   headerLet: false,
   title: 'Bem vindo',
   headerStyle: {backgroundColor: COLORS.primary},
-  headerTitleStyle: {color: COLORS.white},
+  headerTitleStyle: {color: COLORS.black},
 };
 
 const forgotPassWordStyle = {
