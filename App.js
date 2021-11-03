@@ -26,7 +26,11 @@ function App() {
             options={signInStyle}
           />
           <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen
+            name="SignUp"
+            component={SignUp}
+            options={signUpStyle}
+          />
           <Stack.Screen
             name="ForgotPassWord"
             component={ForgotPassWord}
@@ -41,15 +45,21 @@ function App() {
 export default App;
 
 const signInStyle = {
-  headerLet: false,
-  title: 'Bem vindo',
-  headerStyle: {backgroundColor: COLORS.primary},
-  headerTitleStyle: {color: COLORS.black},
+  headerLet: false, // Não aparece a seta de votar <-
+  title: 'Bem vindo', // Titulo da página
+  headerStyle: {backgroundColor: COLORS.primary}, // Estilo do header do menu
+  headerTitleStyle: {color: COLORS.black}, // Estilda do titulo
 };
 
 const forgotPassWordStyle = {
   title: 'Recuperação Senha',
   headerStyle: {backgroundColor: COLORS.primary},
   headerTitleStyle: {color: COLORS.white},
-  headerTintColor: COLORS.white,
+  headerTintColor: COLORS.white, //Estilda seta <-
+};
+
+const signUpStyle = {
+  title: 'Cadastre-se',
+  headerStyle: {backgroundColor: COLORS.primary},
+  headerTitleStyle: {color: COLORS.black}, //Estilda seta <-
 };

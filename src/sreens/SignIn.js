@@ -37,11 +37,18 @@ const SignIn = ({navigation}) => {
   //   }
   // };
   const entrar = () => {
-    console.log(`Email: ${email}  --- Senha: ${pass}`);
+    // console.log(`Email: ${email}  --- Senha: ${pass}`);
     if (email !== '' && pass !== '') {
       auth()
         .signInWithEmailAndPassword(email, pass)
         .then(() => {
+          if (!auth().currentUser.emailVerified) {
+            Alert.alert(
+              'Erro',
+              'Verifique o email enviado cadastrado para prosseguir.',
+            );
+            return;
+          }
           navigation.dispatch(
             CommonActions.reset({
               index: 0,
@@ -84,6 +91,7 @@ const SignIn = ({navigation}) => {
         routes: [{name: 'SignUp'}],
       }),
     );
+    navigation.navigate('SignUp');
   };
 
   return (
@@ -126,9 +134,9 @@ const SignIn = ({navigation}) => {
           />
 
           <Input
-            ref={ref => {
-              this.passTextInput = ref; // recebe a referencia
-            }}
+            // ref={ref => {
+            //   this.passTextInput = ref; // recebe a referencia
+            // }}
             label="Senha"
             placeholder="Senha@123"
             onChangeText={t => setPass(t)}
