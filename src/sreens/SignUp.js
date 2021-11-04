@@ -6,7 +6,8 @@ import MeuButton from '../components/MeuButton';
 import auth from '@react-native-firebase/auth';
 import {CommonActions} from '@react-navigation/routers';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {Input, Image, Text} from 'react-native-elements';
+import {Input} from 'react-native-elements';
+import firestore from '@react-native-firebase/firestore';
 
 const SignUp = ({navigation}) => {
   const [nome, setNome] = useState('');
@@ -17,32 +18,54 @@ const SignUp = ({navigation}) => {
   const cadastrar = () => {
     if (nome !== '' && email !== '' && pass !== '' && confirmPass !== '') {
       if (pass === confirmPass) {
+        console.log('Senhas Conferem');
         auth()
           .createUserWithEmailAndPassword(email, pass)
           .then(() => {
+            console.log('-----');
+            console.log('Entrou no then');
+            console.log('-----');
             let userF = auth().currentUser;
-            userF
-              .sendEmailVerification()
+            let user = {};
+            user.nome = nome;
+            user.email = email;
+            firestore()
+              .collection('users') // Refêrencia da coleção
+              .doc(userF.uid) // Chave do documentos
+              .set(user) // Valor do documentos
               .then(() => {
-                Alert.alert(
-                  'Informação',
-                  'Foi enciado um email para: ' + email + ' para verificação.',
-                );
-                navigation.dispatch(
-                  CommonActions.reset({
-                    index: 0,
-                    routes: [{name: 'SignIn'}],
-                  }),
-                );
+                console.log('SignUp, cadastrar: Usuário adicionado');
+                // Assim aguarda criar o registro do banco de dados para só apos enviar o email de verificação
+                userF
+                  .sendEmailVerification()
+                  .then(() => {
+                    console.log('VERIFICA EMAIL');
+                    Alert.alert(
+                      'Informação',
+                      'Foi enviado um email para: ' +
+                        email +
+                        ' para verificação.',
+                    );
+                    navigation.dispatch(
+                      CommonActions.reset({
+                        index: 0,
+                        routes: [{name: 'SignIn'}],
+                      }),
+                    );
+                  })
+                  .catch(e => {
+                    console.log('Erroo ----1');
+                    console.log('SignUp, cadastrar: ', e);
+                  });
               })
               .catch(e => {
-                console.log('SignUp, cadastrar: ', e);
+                console.log('Erroo ----2');
+                console.log('SignUp: erro em entrar: ' + e);
               });
-            // setEmail('');
-            // setPass('');
           })
           .catch(e => {
-            console.log('SignIn: erro em entrar: ' + e);
+            console.log('Erroo ----3');
+            console.log('SignUp: erro em entrar: ' + e);
             switch (e.code) {
               case 'auth/email-already-in-use':
                 Alert.alert('Erro', 'Email já esta em uso.');
@@ -62,9 +85,11 @@ const SignUp = ({navigation}) => {
             }
           });
       } else {
+        console.log('Senha não conferem');
         Alert.alert('Erro', 'As senhas digitadas são diferentes.');
       }
     } else {
+      console.log('Faltam Dados a ser prenchidos');
       Alert.alert(
         'Erro',
         'Por favor preencha os campos de nome, email e  senha!',

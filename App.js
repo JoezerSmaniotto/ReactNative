@@ -6,6 +6,7 @@ import Home from './src/sreens/Home';
 import SignIn from './src/sreens/SignIn';
 import SignUp from './src/sreens/SignUp';
 import ForgotPassWord from './src/sreens/ForgotPassWord';
+import Preload from './src/sreens/Preload';
 import {StatusBar} from 'react-native';
 import {COLORS} from './src/assets/colors';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -17,9 +18,14 @@ function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <StatusBar backgroundColor={COLORS.primaryDark} />
-        <Stack.Navigator initialRouteName="SignIn">
+        <Stack.Navigator initialRouteName="Preload">
           {/*name =Nome Que quero q página apareça Na parte superior da tela
           component=Nome do component da página a ser importado */}
+          <Stack.Screen
+            name="Preload"
+            component={Preload}
+            options={preloadStyle}
+          />
           <Stack.Screen
             name="SignIn"
             component={SignIn}
@@ -62,4 +68,8 @@ const signUpStyle = {
   title: 'Cadastre-se',
   headerStyle: {backgroundColor: COLORS.primary},
   headerTitleStyle: {color: COLORS.black}, //Estilda seta <-
+};
+
+const preloadStyle = {
+  headerShown: false, // APAGA A BARRA DE AÇÕES DE CIMA
 };

@@ -12,6 +12,8 @@ import MeuButton from '../components/MeuButton';
 import {COLORS} from '../assets/colors';
 import auth from '@react-native-firebase/auth';
 import {CommonActions} from '@react-navigation/routers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import firestore from '@react-native-firebase/firestore';
 // import Loading from '../components/Loading';
 // import {AuthUserContext} from '../context/AuthUserProvider';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -20,7 +22,7 @@ import {Input, Image, Text} from 'react-native-elements';
 const SignIn = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   // const {signIn} = useContext(AuthUserContext);
 
   const recuperarSenha = () => {
@@ -36,6 +38,45 @@ const SignIn = ({navigation}) => {
   //     Alert.alert('Erro', 'Por favor, digite email e senha.');
   //   }
   // };
+
+  const storeUserCache = async value => {
+    //  GUARDO EM CACHE OS DADOS
+    try {
+      value.pass = pass;
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem('user', jsonValue); // guarda em cache com a chave Users
+
+      // Apos cachear os dados irá mandar para o rota quando logado
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'Home'}],
+        }),
+      );
+    } catch (e) {
+      console.log('Sign: erro em storeUserCache : ' + e);
+    }
+  };
+
+  const getUser = () => {
+    firestore()
+      .collection('users') // Entra na coleção users
+      .doc(auth().currentUser.uid) // Pega o documento cujo o  id é do usuário que esta se logando na sessão
+      .get() // Busca o documento
+      .then(doc => {
+        // trata a promisse
+        if (doc.exists()) {
+          // Se estiver tudo certo GUARDO EM CACHE, passando os dados para a função storeUserCache
+          storeUserCache(doc.data());
+        } else {
+          console.log('No such document!');
+        }
+      })
+      .catch(e => {
+        console.log('Sign: erro em getUser : ' + e);
+      });
+  };
+
   const entrar = () => {
     // console.log(`Email: ${email}  --- Senha: ${pass}`);
     if (email !== '' && pass !== '') {
@@ -49,14 +90,7 @@ const SignIn = ({navigation}) => {
             );
             return;
           }
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{name: 'Home'}],
-            }),
-          );
-          // setEmail('');
-          // setPass('');
+          getUser();
         })
         .catch(e => {
           console.log('SignIn: erro em entrar: ' + e);
@@ -129,7 +163,7 @@ const SignIn = ({navigation}) => {
             onChangeText={t => setEmail(t)}
             keyboardType="email-address"
             leftIcon={{type: 'font-awesome', name: 'envelope'}}
-            // returnKeyType="next"
+            returnKeyType="next"
             // onEndEditing={() => this.passTextInput.focus()}
           />
 
@@ -141,8 +175,9 @@ const SignIn = ({navigation}) => {
             placeholder="Senha@123"
             onChangeText={t => setPass(t)}
             keyboardType="default"
+            secureTextEntry={true}
             leftIcon={{type: 'font-awesome', name: 'lock'}}
-            // returnKeyType="next"
+            returnKeyType="next"
             // onEndEditing={() => this.passTextInput.focus()}
           />
 
