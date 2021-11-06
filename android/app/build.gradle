@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: 'com.google.gms.google-services'
 
+
 import com.android.build.OutputFile
 
 /**
@@ -200,11 +201,6 @@ dependencies {
     
     //Habilita o multidex
     implementation 'androidx.multidex:multidex:2.0.1'
-
-    //Firebase
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-auth:18.0.0'
-    implementation 'com.google.firebase:firebase-firestore:20.0.0'
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'

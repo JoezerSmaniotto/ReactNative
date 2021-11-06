@@ -1,7 +1,6 @@
-import 'react-native-gesture-handler';
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from './src/sreens/Home';
 import SignIn from './src/sreens/SignIn';
 import SignUp from './src/sreens/SignUp';
@@ -11,7 +10,7 @@ import {StatusBar} from 'react-native';
 import {COLORS} from './src/assets/colors';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 function App() {
   return (
