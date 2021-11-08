@@ -11,7 +11,7 @@ const LogoutButton = () => {
     //1- Remove o item do AsyncStorage "cache"
     AsyncStorage.removeItem('user')
       .then(() => {
-        //2- Apos remover da cache aqui eu faço um signOutn No firebase
+        //2- Apos remover da cache aqui eu faço um signOut No firebase
         auth()
           .signOut(() => {})
           .then()
@@ -20,7 +20,7 @@ const LogoutButton = () => {
               'LogoutButton: erro em signOut e na função auth : ' + e,
             );
           });
-        //3- Apos o passo 1 e 2 restart o APP.
+        //3- Apos o passo 1 e 2, faço o restart o APP.
         RNRestart.Restart();
       })
       .catch(e => {
@@ -31,10 +31,12 @@ const LogoutButton = () => {
   };
   return (
     <Button
-      icon={<Icon name="arrow-right" size={15} color="white" />}
-      title="Button with icon component"
-      // buttonStyle={styles.button}
+      icon={{type: 'font-awesome', name: 'sign-out'}}
+      // title="Sair"
+      buttonStyle={styles.button}
+      iconContainerStyle={styles.iconContainerStyle}
       onPress={signOut}
+      transparent
     />
   );
 };
@@ -43,9 +45,13 @@ export default LogoutButton;
 
 const styles = StyleSheet.create({
   button: {
-    width: 50,
+    // width: 50,
     // height: 50,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  iconContainerStyle: {
+    color: 'white',
   },
 });

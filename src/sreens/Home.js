@@ -1,22 +1,25 @@
-import React, {useEffect} from 'react';
+import React, {useLayoutEffect} from 'react';
 import {Text} from 'react-native-elements';
 import {COLORS} from '../assets/colors';
 import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
 import LogoutButton from '../components/LogoutButton';
+import {Button} from 'react-native';
 
-const Home = props => {
-  useEffect(({navigation}) => {
+const Home = ({navigation}) => {
+  useLayoutEffect(() => {
+    // Personalização da barra de status
+    /* Setando os OPTIONS  que passo de default na APP, aqui como irei passar component
+    fiz o Options aqui */
     navigation.setOptions({
-      headerLeft: false,
+      // headerLeft: false,
       title: 'Usuários',
       headerStyle: {
-        backgroundColor: COLORS.white,
+        backgroundColor: COLORS.primary,
       },
       headerTitleStyle: {color: COLORS.white},
-      headerRight: () => {
-        <LogoutButton />;
-      },
+      headerRight: () => <LogoutButton />,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <SafeAreaView style={styles.container}>

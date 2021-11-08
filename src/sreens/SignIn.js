@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 // import Loading from '../components/Loading';
 // import {AuthUserContext} from '../context/AuthUserProvider';
-import Icon from 'react-native-vector-icons/FontAwesome';
+// import Icon from 'react-native-vector-icons/FontAwesome';
 import {Input, Image, Text} from 'react-native-elements';
 
 const SignIn = ({navigation}) => {
@@ -59,13 +59,14 @@ const SignIn = ({navigation}) => {
   };
 
   const getUser = () => {
+    // Vai buscar dos dados no Banco de dados de acordo com o uid d user logado
     firestore()
       .collection('users') // Entra na coleção users
       .doc(auth().currentUser.uid) // Pega o documento cujo o  id é do usuário que esta se logando na sessão
       .get() // Busca o documento
       .then(doc => {
         // trata a promisse
-        if (doc.exists()) {
+        if (doc.exists) {
           // Se estiver tudo certo GUARDO EM CACHE, passando os dados para a função storeUserCache
           storeUserCache(doc.data());
         } else {
@@ -78,18 +79,20 @@ const SignIn = ({navigation}) => {
   };
 
   const entrar = () => {
-    // console.log(`Email: ${email}  --- Senha: ${pass}`);
+    // AÇÃO DISPARA QUANDO O USER VAI LOGAR NO SISTEMA COM EMAIL E SENHA
     if (email !== '' && pass !== '') {
       auth()
         .signInWithEmailAndPassword(email, pass)
         .then(() => {
           if (!auth().currentUser.emailVerified) {
+            // verifica se email foi validado
             Alert.alert(
               'Erro',
               'Verifique o email enviado cadastrado para prosseguir.',
             );
             return;
           }
+          // SE TIVE TUDO CERTO, e com o email verificado,  CHAMA A FUNÇÃO getUser()
           getUser();
         })
         .catch(e => {

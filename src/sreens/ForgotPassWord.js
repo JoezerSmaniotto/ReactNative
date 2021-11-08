@@ -9,7 +9,7 @@ const ForgotPassWord = ({navigation}) => {
 
   const recover = () => {
     if (email !== '') {
-      console.log(email);
+      // sendPasswordResetEmail usada para RESETAR O EMAIL
       auth()
         .sendPasswordResetEmail(email)
         .then(r => {

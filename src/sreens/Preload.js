@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, StyleSheet, SafeAreaView, Alert} from 'react-native';
+import {StyleSheet, SafeAreaView, Alert} from 'react-native';
 import {COLORS} from '../assets/colors';
 
 import auth from '@react-native-firebase/auth';
@@ -11,7 +11,7 @@ const Preload = ({navigation}) => {
   const getUserCache = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('user');
-      console.log(jsonValue);
+      // console.log(jsonValue);
       return jsonValue !== null ? JSON.parse(jsonValue) : null;
     } catch (e) {
       console.log('Home: erro em getUserCache : ' + e);
@@ -21,7 +21,7 @@ const Preload = ({navigation}) => {
   const loginUser = async () => {
     const user = await getUserCache();
     if (user) {
-      auth()
+      auth() // NO CASO SE TIVER USER EM CACHE, TEM LOGAR O USER NO SISTEMA.
         .signInWithEmailAndPassword(user.email, user.pass)
         .then(() => {
           navigation.dispatch(

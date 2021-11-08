@@ -18,27 +18,28 @@ const SignUp = ({navigation}) => {
   const cadastrar = () => {
     if (nome !== '' && email !== '' && pass !== '' && confirmPass !== '') {
       if (pass === confirmPass) {
-        console.log('Senhas Conferem');
+        // CRIA USUÁRIO NO firebase com  createUserWithEmailAndPassword
+        // como o nome diz com E-mail e Senha
         auth()
           .createUserWithEmailAndPassword(email, pass)
           .then(() => {
-            console.log('-----');
-            console.log('Entrou no then');
-            console.log('-----');
+            /*Quando crar usuário ele já loga na seção, Assim obtem o usuário logado na
+            aplicação com o auth().currentUser, que vai poder disparar o email de vereficação*/
             let userF = auth().currentUser;
             let user = {};
             user.nome = nome;
             user.email = email;
             firestore()
               .collection('users') // Refêrencia da coleção
-              .doc(userF.uid) // Chave do documentos
-              .set(user) // Valor do documentos
+              .doc(userF.uid) // Chave do documentos IDENTICADOS UID.
+              .set(user) // Valor do documentos, DADOS QUE SERAM PERSISITIDOS NO BANCO
               .then(() => {
                 console.log('SignUp, cadastrar: Usuário adicionado');
-                // Assim aguarda criar o registro do banco de dados para só apos enviar o email de verificação
+                // Assim aguarda criar o registro do banco de dados, para só apos enviar o email de verificação
                 userF
                   .sendEmailVerification()
                   .then(() => {
+                    // dispara de email de verificação
                     console.log('VERIFICA EMAIL');
                     Alert.alert(
                       'Informação',
@@ -46,6 +47,7 @@ const SignUp = ({navigation}) => {
                         email +
                         ' para verificação.',
                     );
+                    // Apos ter enviado o email de verificação, redireciona para o SignIn
                     navigation.dispatch(
                       CommonActions.reset({
                         index: 0,
@@ -151,6 +153,7 @@ const SignUp = ({navigation}) => {
             // returnKeyType="send"
             // onEndEditing={() => cadastrar()}
           />
+
           <MeuButton texto="ENTRAR" onClick={cadastrar} />
         </View>
       </ScrollView>
