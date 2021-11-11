@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, SafeAreaView, ScrollView, Alert} from 'react-native';
-import {COLORS} from '../assets/colors';
+import {COLORS} from '../../assets/colors';
 
 import auth from '@react-native-firebase/auth';
 import {CommonActions} from '@react-navigation/routers';
 import firestore from '@react-native-firebase/firestore';
 
-import MeuButton from '../components/MeuButton';
-import Loading from '../components/Loading';
+import MeuButton from '../../components/MeuButton';
+import Loading from '../../components/Loading';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {Input} from 'react-native-elements';
 const SignUp = ({navigation}) => {

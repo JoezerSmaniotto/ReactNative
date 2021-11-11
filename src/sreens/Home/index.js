@@ -1,8 +1,8 @@
 import React, {useLayoutEffect} from 'react';
 import {Text} from 'react-native-elements';
-import {COLORS} from '../assets/colors';
+import {COLORS} from '../../assets/colors';
 import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
-import LogoutButton from '../components/LogoutButton';
+import LogoutButton from '../../components/LogoutButton';
 import {Button} from 'react-native';
 
 const Home = ({navigation}) => {

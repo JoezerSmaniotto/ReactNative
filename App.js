@@ -8,6 +8,8 @@ import SignIn from './src/sreens/SignIn';
 import SignUp from './src/sreens/SignUp';
 import ForgotPassWord from './src/sreens/ForgotPassWord';
 import Preload from './src/sreens/Preload';
+import Pets from './src/sreens/Pets';
+import User from './src/sreens/User';
 import {StatusBar} from 'react-native';
 import {COLORS} from './src/assets/colors';
 
@@ -32,6 +34,8 @@ function App() {
             options={signInStyle}
           />
           <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Pets" component={Pets} options={petsStyle} />
+          <Stack.Screen name="User" component={User} options={userStyle} />
           <Stack.Screen
             name="SignUp"
             component={SignUp}
@@ -72,4 +76,16 @@ const signUpStyle = {
 
 const preloadStyle = {
   headerShown: false, // APAGA A BARRA DE AÇÕES DE CIMA
+};
+
+const petsStyle = {
+  title: 'Pets',
+  headerStyle: {backgroundColor: COLORS.primary},
+  headerTitleStyle: {color: COLORS.black}, //Estilda seta <-
+};
+
+const userStyle = {
+  title: 'Usuário',
+  headerStyle: {backgroundColor: COLORS.primary},
+  headerTitleStyle: {color: COLORS.black}, //Estilda seta <-
 };

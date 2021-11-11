@@ -5,8 +5,8 @@ import {CommonActions} from '@react-navigation/routers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {StyleSheet, SafeAreaView, Alert} from 'react-native';
-import {COLORS} from '../assets/colors';
 import {Image} from 'react-native-elements';
+import {COLORS} from '../../assets/colors';
 
 const Preload = ({navigation}) => {
   const getUserCache = async () => {
@@ -68,7 +68,7 @@ const Preload = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <Image
         style={styles.image}
-        source={require('../assets/images/logoIvet.png')}
+        source={require('../../assets/images/logoIvet.png')}
         accessibilityLabel="logo do app"
       />
     </SafeAreaView>

@@ -7,9 +7,9 @@ import firestore from '@react-native-firebase/firestore';
 // import {AuthUserContext} from '../context/AuthUserProvider';
 
 import {SafeAreaView, ScrollView, View, StyleSheet, Alert} from 'react-native';
-import MeuButton from '../components/MeuButton';
-import {COLORS} from '../assets/colors';
-import Loading from '../components/Loading';
+import MeuButton from '../../components/MeuButton';
+import {COLORS} from '../../assets/colors';
+import Loading from '../../components/Loading';
 import {Input, Image, Text} from 'react-native-elements';
 
 const SignIn = ({navigation}) => {
@@ -134,7 +134,7 @@ const SignIn = ({navigation}) => {
         <View style={styles.divSuperior}>
           <Image
             style={styles.image}
-            source={require('../assets/images/logoIvet.png')}
+            source={require('../../assets/images/logoIvet.png')}
             accessibilityLabel="logo do app"
           />
           {/* <TextInput

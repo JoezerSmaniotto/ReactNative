@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, TextInput, Alert} from 'react-native';
-import {COLORS} from '../assets/colors';
-import MeuButton from '../components/MeuButton';
+import {COLORS} from '../../assets/colors';
+import MeuButton from '../../components/MeuButton';
 import auth from '@react-native-firebase/auth';
 
 const ForgotPassWord = ({navigation}) => {
