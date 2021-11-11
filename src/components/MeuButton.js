@@ -7,17 +7,17 @@ function MeuButton(props) {
     // <TouchableHighlight style={styles.button} onPress={() => props.onClick()}>
     //   <Text style={styles.text}>{props.texto}</Text>
     // </TouchableHighlight>
-    <View style={styles.button}>
-      <Button
-        title={props.texto}
-        type={
-          props.texto !== null || props.texto !== undefined ? props.texto : ''
-        }
-        buttonStyle={{backgroundColor: 'trasparent'}}
-        onPress={() => props.onClick()}
-        titleStyle={styles.text}
-      />
-    </View>
+    // <View style={styles.button}>
+    <Button
+      title={props.texto}
+      type={
+        props.texto !== null || props.texto !== undefined ? props.texto : ''
+      }
+      containerStyle={styles.button}
+      onPress={() => props.onClick()}
+      titleStyle={styles.text}
+    />
+    // </View>
   );
 }
 

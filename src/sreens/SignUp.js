@@ -2,24 +2,27 @@ import React, {useState} from 'react';
 import {View, StyleSheet, SafeAreaView, ScrollView, Alert} from 'react-native';
 import {COLORS} from '../assets/colors';
 
-import MeuButton from '../components/MeuButton';
 import auth from '@react-native-firebase/auth';
 import {CommonActions} from '@react-navigation/routers';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {Input} from 'react-native-elements';
 import firestore from '@react-native-firebase/firestore';
 
+import MeuButton from '../components/MeuButton';
+import Loading from '../components/Loading';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {Input} from 'react-native-elements';
 const SignUp = ({navigation}) => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const cadastrar = () => {
     if (nome !== '' && email !== '' && pass !== '' && confirmPass !== '') {
       if (pass === confirmPass) {
         // CRIA USUÁRIO NO firebase com  createUserWithEmailAndPassword
         // como o nome diz com E-mail e Senha
+        setLoading(true);
         auth()
           .createUserWithEmailAndPassword(email, pass)
           .then(() => {
@@ -48,6 +51,7 @@ const SignUp = ({navigation}) => {
                         ' para verificação.',
                     );
                     // Apos ter enviado o email de verificação, redireciona para o SignIn
+                    setLoading(false);
                     navigation.dispatch(
                       CommonActions.reset({
                         index: 0,
@@ -56,18 +60,16 @@ const SignUp = ({navigation}) => {
                     );
                   })
                   .catch(e => {
-                    console.log('Erroo ----1');
                     console.log('SignUp, cadastrar: ', e);
                   });
               })
               .catch(e => {
-                console.log('Erroo ----2');
                 console.log('SignUp: erro em entrar: ' + e);
               });
           })
           .catch(e => {
-            console.log('Erroo ----3');
-            console.log('SignUp: erro em entrar: ' + e);
+            setLoading(false);
+            console.log('SignUp: erro em entrar1: ' + e);
             switch (e.code) {
               case 'auth/email-already-in-use':
                 Alert.alert('Erro', 'Email já esta em uso.');
@@ -157,6 +159,7 @@ const SignUp = ({navigation}) => {
           <MeuButton texto="ENTRAR" onClick={cadastrar} />
         </View>
       </ScrollView>
+      {loading && <Loading />}
     </SafeAreaView>
   );
 };

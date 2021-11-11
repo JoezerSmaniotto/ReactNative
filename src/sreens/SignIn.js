@@ -1,28 +1,21 @@
 import React, {useState} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  View,
-  StyleSheet,
-  // Text,
-  // TextInput,
-  Alert,
-} from 'react-native';
-import MeuButton from '../components/MeuButton';
-import {COLORS} from '../assets/colors';
+
 import auth from '@react-native-firebase/auth';
 import {CommonActions} from '@react-navigation/routers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
-// import Loading from '../components/Loading';
 // import {AuthUserContext} from '../context/AuthUserProvider';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+
+import {SafeAreaView, ScrollView, View, StyleSheet, Alert} from 'react-native';
+import MeuButton from '../components/MeuButton';
+import {COLORS} from '../assets/colors';
+import Loading from '../components/Loading';
 import {Input, Image, Text} from 'react-native-elements';
 
 const SignIn = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   // const {signIn} = useContext(AuthUserContext);
 
   const recuperarSenha = () => {
@@ -47,6 +40,7 @@ const SignIn = ({navigation}) => {
       await AsyncStorage.setItem('user', jsonValue); // guarda em cache com a chave Users
 
       // Apos cachear os dados irá mandar para o rota quando logado
+      setLoading(false);
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -81,10 +75,12 @@ const SignIn = ({navigation}) => {
   const entrar = () => {
     // AÇÃO DISPARA QUANDO O USER VAI LOGAR NO SISTEMA COM EMAIL E SENHA
     if (email !== '' && pass !== '') {
+      setLoading(true);
       auth()
         .signInWithEmailAndPassword(email, pass)
         .then(() => {
           if (!auth().currentUser.emailVerified) {
+            setLoading(false);
             // verifica se email foi validado
             Alert.alert(
               'Erro',
@@ -96,6 +92,7 @@ const SignIn = ({navigation}) => {
           getUser();
         })
         .catch(e => {
+          setLoading(false);
           console.log('SignIn: erro em entrar: ' + e);
           switch (e.code) {
             case 'auth/user-not-found':
@@ -203,7 +200,7 @@ const SignIn = ({navigation}) => {
           </View>
         </View>
       </ScrollView>
-      {/* {loading && <Loading />} */}
+      {loading && <Loading />}
     </SafeAreaView>
   );
 };

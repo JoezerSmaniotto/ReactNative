@@ -31,8 +31,8 @@ const LogoutButton = () => {
   };
   return (
     <Button
-      icon={{type: 'font-awesome', name: 'sign-out'}}
-      // title="Sair"
+      // icon={{type: 'font-awesome', name: 'sign-out', style: {color: 'white'}}}
+      icon={<Icon name="sign-out" size={25} color="white" />}
       buttonStyle={styles.button}
       iconContainerStyle={styles.iconContainerStyle}
       onPress={signOut}
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
+    color: 'white',
   },
   iconContainerStyle: {
     color: 'white',

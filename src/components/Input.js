@@ -16,8 +16,6 @@ export default Input = ({
       keyboardType={keyboardType}
       leftIcon={leftIcon}
       {...props}
-      //  returnKeyType="next"
-      //  onEndEditing={() => this.passTextInput.focus()}
     />
   );
 };

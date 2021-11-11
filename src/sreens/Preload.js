@@ -1,11 +1,12 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, SafeAreaView, Alert} from 'react-native';
-import {COLORS} from '../assets/colors';
 
 import auth from '@react-native-firebase/auth';
 import {CommonActions} from '@react-navigation/routers';
-import {Image} from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import {StyleSheet, SafeAreaView, Alert} from 'react-native';
+import {COLORS} from '../assets/colors';
+import {Image} from 'react-native-elements';
 
 const Preload = ({navigation}) => {
   const getUserCache = async () => {
