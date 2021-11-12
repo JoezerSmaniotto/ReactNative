@@ -6,11 +6,11 @@ import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
 const Pets = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <Text h1 style={styles.texto}>
-          Pets
-        </Text>
-      </ScrollView>
+      {/* <ScrollView> */}
+      <Text h1 style={styles.texto}>
+        Pets
+      </Text>
+      {/* </ScrollView> */}
     </SafeAreaView>
   );
 };
