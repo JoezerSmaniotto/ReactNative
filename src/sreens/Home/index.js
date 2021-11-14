@@ -50,7 +50,7 @@ const Home = ({navigation}) => {
       //   tabBarInactiveTintColor: 'gray',
       // })}
       // initialRouteName={Pets}
-      tabBarOptions={{
+      screenOptions={{
         initialRouteName: 'Pets',
         activeTintColor: COLORS.primary,
         labelStyle: {
