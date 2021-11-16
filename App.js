@@ -19,7 +19,7 @@ function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <StatusBar backgroundColor={COLORS.primaryDark} />
+        {/* <StatusBar backgroundColor={COLORS.primaryDark} /> */}
         <Stack.Navigator initialRouteName="Preload">
           {/*name =Nome Que quero q página apareça Na parte superior da tela
           component=Nome do component da página a ser importado */}
@@ -33,7 +33,7 @@ function App() {
             component={SignIn}
             options={signInStyle}
           />
-          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen name="Home" component={Home} options={homeStyle} />
           <Stack.Screen name="Pets" component={Pets} options={petsStyle} />
           <Stack.Screen name="User" component={User} options={userStyle} />
           <Stack.Screen
@@ -78,14 +78,14 @@ const preloadStyle = {
   headerShown: false, // APAGA A BARRA DE AÇÕES DE CIMA
 };
 
+const homeStyle = {
+  headerShown: false,
+};
+
 const petsStyle = {
-  title: 'Pets',
-  headerStyle: {backgroundColor: COLORS.primary},
-  headerTitleStyle: {color: COLORS.black}, //Estilda seta <-
+  headerShown: false,
 };
 
 const userStyle = {
-  title: 'Usuário',
-  headerStyle: {backgroundColor: COLORS.primary},
-  headerTitleStyle: {color: COLORS.black}, //Estilda seta <-
+  headerShown: false,
 };

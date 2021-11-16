@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native-elements';
 import {COLORS} from '../../assets/colors';
-import {SafeAreaView, ScrollView, StyleSheet} from 'react-native';
+import {SafeAreaView, StyleSheet, ScrollView} from 'react-native';
 
 const Pets = ({navigation}) => {
   return (
