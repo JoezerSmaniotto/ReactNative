@@ -12,7 +12,9 @@ const Stack = createNativeStackNavigator();
 
 function AuthStack() {
   return (
-    <Stack.Navigator initialRouteName="SignIn">
+    <Stack.Navigator
+      initialRouteName="SignIn"
+      screenOptions={{headerShown: false}}>
       {/*name =Nome Que quero q página apareça Na parte superior da tela
           component=Nome do component da página a ser importado */}
       <Stack.Screen name="SignIn" component={SignIn} options={signInStyle} />

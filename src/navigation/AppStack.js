@@ -12,7 +12,9 @@ const Stack = createNativeStackNavigator();
 
 function AppStack() {
   return (
-    <Stack.Navigator initialRouteName="Preload">
+    <Stack.Navigator
+      initialRouteName="Preload"
+      screenOptions={{headerShown: false}}>
       {/*name =Nome Que quero q página apareça Na parte superior da tela
           component=Nome do component da página a ser importado */}
       <Stack.Screen name="Preload" component={Preload} options={preloadStyle} />

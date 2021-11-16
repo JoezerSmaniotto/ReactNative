@@ -1,9 +1,7 @@
 import React, {useContext, useEffect} from 'react';
 import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
 import auth from '@react-native-firebase/auth';
-
 import {AuthUserContext} from '../context/AuthUserProvider';
 import AppStack from './AppStack';
 import AuthStack from './AuthStack';
@@ -25,13 +23,10 @@ export default function Routes() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <StatusBar backgroundColor={COLORS.primaryDark} />
-        {/* Aqui se tiver user ele vai mandar AppStack iniciando em home,Caso não
+    <NavigationContainer>
+      {/* Aqui se tiver user ele vai mandar AppStack iniciando em home,Caso não
       tenha user ele vai mandar para o SigIn */}
-        {user ? <AppStack /> : <AuthStack />}
-      </NavigationContainer>
-    </SafeAreaProvider>
+      {user ? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
   );
 }
