@@ -41,12 +41,12 @@ const SignIn = ({navigation}) => {
 
       // Apos cachear os dados irá mandar para o rota quando logado
       setLoading(false);
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{name: 'Home'}],
-        }),
-      );
+      // navigation.dispatch(
+      //   CommonActions.reset({
+      //     index: 0,
+      //     routes: [{name: 'Home'}],
+      //   }),
+      // );
     } catch (e) {
       console.log('Sign: erro em storeUserCache : ' + e);
     }
@@ -113,10 +113,6 @@ const SignIn = ({navigation}) => {
       Alert.alert('Erro', 'Por favor preencha os campos de email ou senha!');
     }
   };
-
-  // const cadastrar = () => {
-  //   navigation.navigate('SignUp');
-  // };
 
   const cadastrar = () => {
     navigation.dispatch(

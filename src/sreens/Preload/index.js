@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
 
-import auth from '@react-native-firebase/auth';
+// import auth from '@react-native-firebase/auth';
 import {CommonActions} from '@react-navigation/routers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import {StyleSheet, SafeAreaView, Alert} from 'react-native';
+import {StyleSheet, SafeAreaView} from 'react-native';
 import {Image} from 'react-native-elements';
 import {COLORS} from '../../assets/colors';
 
@@ -12,7 +12,6 @@ const Preload = ({navigation}) => {
   const getUserCache = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('user');
-      // console.log(jsonValue);
       return jsonValue !== null ? JSON.parse(jsonValue) : null;
     } catch (e) {
       console.log('Home: erro em getUserCache : ' + e);
@@ -22,40 +21,46 @@ const Preload = ({navigation}) => {
   const loginUser = async () => {
     const user = await getUserCache();
     if (user) {
-      auth() // NO CASO SE TIVER USER EM CACHE, TEM LOGAR O USER NO SISTEMA.
-        .signInWithEmailAndPassword(user.email, user.pass)
-        .then(() => {
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{name: 'Home'}],
-            }),
-          );
-        })
-        .catch(e => {
-          console.log('SignIn: erro em entrar: ' + e);
-          switch (e.code) {
-            case 'auth/user-not-found':
-              Alert.alert('Erro', 'Usuário não cadastrado.');
-              break;
-            case 'auth/wrong-password':
-              Alert.alert('Erro', 'Erro na senha.');
-              break;
-            case 'auth/invalid-email':
-              Alert.alert('Erro', 'Email inválido.');
-              break;
-            case 'auth/user-disabled':
-              Alert.alert('Erro', 'Usuário desabilitado.');
-              break;
-          }
-        });
-    } else {
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
-          routes: [{name: 'SignIn'}],
+          routes: [{name: 'Home'}],
         }),
       );
+      // auth() // NO CASO SE TIVER USER EM CACHE, TEM LOGAR O USER NO SISTEMA.
+      //   .signInWithEmailAndPassword(user.email, user.pass)
+      //   .then(() => {
+      //     // navigation.dispatch(
+      //     //   CommonActions.reset({
+      //     //     index: 0,
+      //     //     routes: [{name: 'Home'}],
+      //     //   }),
+      //     // );
+      //   })
+      //   .catch(e => {
+      //     console.log('SignIn: erro em entrar: ' + e);
+      //     switch (e.code) {
+      //       case 'auth/user-not-found':
+      //         Alert.alert('Erro', 'Usuário não cadastrado.');
+      //         break;
+      //       case 'auth/wrong-password':
+      //         Alert.alert('Erro', 'Erro na senha.');
+      //         break;
+      //       case 'auth/invalid-email':
+      //         Alert.alert('Erro', 'Email inválido.');
+      //         break;
+      //       case 'auth/user-disabled':
+      //         Alert.alert('Erro', 'Usuário desabilitado.');
+      //         break;
+      //     }
+      //   });
+    } else {
+      // navigation.dispatch(
+      //   CommonActions.reset({
+      //     index: 0,
+      //     routes: [{name: 'SignIn'}],
+      //   }),
+      // );
     }
   };
 
