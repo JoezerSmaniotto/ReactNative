@@ -19,15 +19,16 @@ export const ApiProvider = ({children}) => {
                 'https://firestore.googleapis.com/v1/projects/projetoexemplo1-6b1be/databases/(default)/documents/',
               headers: {Authorization: 'Bearer ' + idToken},
             });
-            console.log('apiLocal: ', apiLocal);
-            // //utiliza o middleware para lançar um exceção (usa try-catch no consumidor)
-            // apiLocal.addResponseTransform(response => {
-            //   if (!response.ok) {
-            //     throw response;
-            //   }
-            // });
-            // //coloca no state
-            // setApi(apiLocal);
+            // console.log('apiLocal: ', apiLocal);
+            //utiliza o middleware para lançar um exceção (usa try-catch no consumidor)
+            // Com o middleware irei pegar a response e fazer uma transformação
+            apiLocal.addResponseTransform(response => {
+              if (!response.ok) {
+                throw response;
+              }
+            });
+            //coloca no state
+            setApi(apiLocal);
           }
         })
         .catch(e => {
