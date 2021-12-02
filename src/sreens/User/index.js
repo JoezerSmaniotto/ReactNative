@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useCallback} from 'react';
 import {Text} from 'react-native-elements';
 import {COLORS} from '../../assets/colors';
 import {SafeAreaView, StyleSheet, ScrollView, View} from 'react-native';
@@ -9,45 +9,72 @@ import MeuButton from '../../components/MeuButton';
 import {Input} from 'react-native-elements';
 
 const User = ({route, navigation}) => {
-  const {getUser, userE} = useContext(UserContext);
+  const {getUser, userE, updateUser, deleteUser} = useContext(UserContext);
 
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
+  const [disabled, setDisabled] = useState(true);
 
   const fetchData = async () => {
     await getUser();
   };
 
   useEffect(() => {
-    fetchData();
     if (userE) {
-      console.log('-----------User--------: ', userE);
+      // console.log('############# E F E C T ##################');
+      // console.log('-----------User--------: ', userE);
+      setNome(userE.nome);
+      setEmail(userE.email);
     }
-  }, [userE, fetchData]);
+  }, [userE]);
 
-  const editar = () => {
-    console.log('-- -- -- EDITAR -- -- --');
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const editar = async () => {
+    setDisabled(!disabled);
+    if (userE.nome !== nome) {
+      let userUpdate = {
+        uid: userE.uid,
+        nome: nome,
+        email: userE.email,
+      };
+      if (!disabled) {
+        await updateUser(userUpdate);
+      }
+    }
   };
 
-  const excluir = () => {
+  // const editar = useCallback(async () => {
+  //   // console.log('-- -- -- EDITAR -- -- --');
+  //   // console.log('NOME => ', nome);
+  //   // console.log('email => ', email);
+  //   // console.log('----------');
+  //   setDisabled(!disabled);
+  //   if (userE.nome !== nome) {
+  //     let userUpdate = {
+  //       uid: userE.uid,
+  //       nome: nome,
+  //       email: userE.email,
+  //     };
+  //     if (!disabled) {
+  //       await updateUser(userUpdate);
+  //     }
+  //   }
+  // }, [disabled, nome, email]);
+
+  const excluir = async () => {
     console.log('-- -- -- Exlcuir Conta -- -- --');
+    await deleteUser(userE.uid);
   };
 
-  // useEffect(() => {
-  //   console.log('User: ', userE);
-  // }, [userE]);
-
-  // useEffect(() => {
-  //   console.log('userLogado:', auth()?.currentUser?.uid);
-  // }, []);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <View>
-          <Text h2 style={styles.text}>
-            Edição Usuário
-          </Text>
+        <View style={styles.superior}>
+          <Text h2>Edição Usuário</Text>
           <Input
             // label="Nome Completo"
             placeholder="Nome Completo"
@@ -55,6 +82,8 @@ const User = ({route, navigation}) => {
             keyboardType="default"
             leftIcon={{type: 'font-awesome', name: 'user'}}
             value={nome}
+            disabled={disabled}
+
             // style={styles.input}
             // returnKeyType="next"
             // onEndEditing={() => this.emailTextInput.focus()}
@@ -70,11 +99,12 @@ const User = ({route, navigation}) => {
             keyboardType="email-address"
             leftIcon={{type: 'font-awesome', name: 'envelope'}}
             value={email}
+            // disabled={true}
             // style={styles.input}
             // returnKeyType="next"
             // onEndEditing={() => this.passTextInput.focus()}
           />
-          <Input
+          {/* <Input
             // ref={ref => {
             //   this.passTextInput = ref; // recebe a referencia
             // }}
@@ -87,9 +117,9 @@ const User = ({route, navigation}) => {
             // style={styles.input}
             // returnKeyType="next"
             // onEndEditing={() => this.confirPassTextInput.focus()}
-          />
+          /> */}
 
-          <MeuButton texto="Editar" onClick={editar} />
+          <MeuButton texto={disabled ? 'Editar' : 'Salvar'} onClick={editar} />
 
           <MeuButton texto="Excluir Conta" onClick={excluir} />
         </View>
@@ -103,14 +133,31 @@ export default User;
 
 const styles = StyleSheet.create({
   container: {
+    display: 'flex',
+    flexDirection: 'row',
     flex: 1,
     justifyContent: 'center',
-    paddingTop: 20,
+    alignItems: 'center',
+    // paddingTop: 20,
     backgroundColor: COLORS.white,
   },
 
-  text: {
+  superior: {
+    flex: 1,
+    margin: 8,
     justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 2.22,
+    elevation: 2,
+
+    // boxShadow:
+    // '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
   },
 
   input: {

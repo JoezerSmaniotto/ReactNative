@@ -3,6 +3,7 @@ import {ToastAndroid} from 'react-native';
 import auth from '@react-native-firebase/auth';
 
 import {ApiContext} from '../context/ApiProvider';
+import {AuthUserContext} from '../context/AuthUserProvider';
 
 export const UserContext = createContext({});
 
@@ -10,8 +11,7 @@ export const UserProvider = ({children}) => {
   const [userE, setUserE] = useState([]);
   const [errorMessage, setErrorMessage] = useState({});
   const {api} = useContext(ApiContext);
-
-  //console.log(api);
+  const {setUser, signOut} = useContext(AuthUserContext);
 
   const showToast = message => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -20,35 +20,29 @@ export const UserProvider = ({children}) => {
   const getUser = async () => {
     try {
       const response = await api.get(`/users/${auth().currentUser.uid}`);
-      console.log('Dados buscados via API');
-      console.log(response.data);
-      console.log(response.data.documents);
-      let data = [];
-      // response.data.documents.map(d => {
-      // let k = data.name.split(
-      //   'projects/projetoexemplo1-6b1be/databases/(default)/documents/users/',
-      // );
-      // console.log("K: ", K);
-      // let id = k[1];
-      //console.log(k[1]);
-      //console.log(d.fields.nome.stringValue);
-      //console.log(d.fields.tecnologias.stringValue);
+      // console.log('Dados buscados via API');
+      // console.log('Data: ', response.data);
 
-      // let data = {
-      //   nome: d.fields.nome.stringValue,
-      //   email: d.fields.email.stringValue,
-      //   uid: k[1],
+      let id = response.data.name.split(
+        'projects/projetoexemplo1-6b1be/databases/(default)/documents/users/',
+      );
+      // console.log('ID: ', id[1]);
+      // console.log(response.data.fields.nome.stringValue);
+      // console.log(response.data.fields.email.stringValue);
 
-      //   //   tecnologias: d.fields.tecnologias.stringValue,
-      // };
-      // });
-      // O padrão do fireBase é devolver ordenado por chave, por este motivo irei ordenar
-      // data.sort((a, b) => b.nome.localeCompare(a.nome));
-      // let filtroUserLogado = data.find(user => {
-      //   return user.uid === auth().currentUser.uid;
-      // });
-      // console.log('filtroUserLogado: ', filtroUserLogado);
-      // setUserE(filtroUserLogado);
+      let userLogado = {
+        nome: response.data.fields.nome.stringValue,
+        email: response.data.fields.email.stringValue,
+        uid: id[1],
+      };
+      // // });
+      // // O padrão do fireBase é devolver ordenado por chave, por este motivo irei ordenar
+      // // data.sort((a, b) => b.nome.localeCompare(a.nome));
+      // // let filtroUserLogado = data.find(user => {
+      // //   return user.uid === auth().currentUser.uid;
+      // // });
+      // // console.log('filtroUserLogado: ', filtroUserLogado);
+      setUserE(userLogado);
     } catch (response) {
       setErrorMessage(response);
       console.log('Erro ao buscar via API.');
@@ -56,6 +50,58 @@ export const UserProvider = ({children}) => {
     }
   };
 
+  // const saveUser = async val => {
+  //   try {
+  //     await api.post('/users/', {
+  //       fields: {
+  //         nome: {stringValue: val.nome},
+  //         tecnologias: {stringValue: val.tecnologias},
+  //       },
+  //     });
+  //     showToast('Dados salvos.');
+  //     getUser();
+  //   } catch (response) {
+  //     setErrorMessage(response);
+  //     console.log('Erro ao saveUser via API.');
+  //     console.log(response);
+  //   }
+  // };
+
+  const updateUser = async val => {
+    // console.log('---- E D I T A R ----');
+    // console.log(val);
+    try {
+      await api.patch('/users/' + val.uid, {
+        fields: {
+          nome: {stringValue: val.nome},
+          email: {stringValue: userE.email},
+        },
+      });
+      showToast('Dados salvos.');
+      getUser();
+    } catch (response) {
+      setErrorMessage(response);
+      console.log('Erro ao updateUser via API.');
+      console.log(response);
+    }
+  };
+
+  const deleteUser = async val => {
+    try {
+      await api.delete('/users/' + val);
+
+      signOut();
+      auth().currentUser.delete();
+
+      showToast('Usuario excluído.');
+      setUser(null);
+      getUser();
+    } catch (response) {
+      setErrorMessage(response);
+      console.log('Erro ao deleteUser via API.');
+      console.log(response);
+    }
+  };
   // const getUser = async () => {
   //   const unsubscribe = firestore()
   //     .collection('userE')
@@ -84,22 +130,18 @@ export const UserProvider = ({children}) => {
   //   return unsubscribe;
   // };
 
-  const saveUser = async val => {
-    try {
-      await api.post('/users/', {
-        fields: {
-          nome: {stringValue: val.nome},
-          tecnologias: {stringValue: val.tecnologias},
-        },
-      });
-      showToast('Dados salvos.');
-      getUser();
-    } catch (response) {
-      setErrorMessage(response);
-      console.log('Erro ao saveUser via API.');
-      console.log(response);
-    }
-  };
+  // const deleteUser = async (val) => {
+  //   firestore()
+  //     .collection('userE')
+  //     .doc(val)
+  //     .delete()
+  //     .then(() => {
+  //       showToast('Empresa excluída.');
+  //     })
+  //     .catch((e) => {
+  //       console.error('UserProvider, deleteUser: ', e);
+  //     });
+  // };
 
   // const saveUser = async (val) => {
   //   await firestore()
@@ -120,55 +162,11 @@ export const UserProvider = ({children}) => {
   //     });
   // };
 
-  const updateUser = async val => {
-    //console.log(val);
-    try {
-      await api.patch('/users/' + val.uid, {
-        fields: {
-          nome: {stringValue: val.nome},
-          tecnologias: {stringValue: val.tecnologias},
-        },
-      });
-      showToast('Dados salvos.');
-      getUser();
-    } catch (response) {
-      setErrorMessage(response);
-      console.log('Erro ao updateUser via API.');
-      console.log(response);
-    }
-  };
-
-  const deleteUser = async val => {
-    try {
-      await api.delete('/users/' + val);
-      showToast('Empresa excluída.');
-      getUser();
-    } catch (response) {
-      setErrorMessage(response);
-      console.log('Erro ao deleteUser via API.');
-      console.log(response);
-    }
-  };
-
-  // const deleteUser = async (val) => {
-  //   firestore()
-  //     .collection('userE')
-  //     .doc(val)
-  //     .delete()
-  //     .then(() => {
-  //       showToast('Empresa excluída.');
-  //     })
-  //     .catch((e) => {
-  //       console.error('UserProvider, deleteUser: ', e);
-  //     });
-  // };
-
   return (
     <UserContext.Provider
       value={{
         userE,
         getUser,
-        saveUser,
         updateUser,
         deleteUser,
       }}>
