@@ -26,7 +26,7 @@ const SignUp = ({navigation}) => {
         auth()
           .createUserWithEmailAndPassword(email, pass)
           .then(() => {
-            /*Quando crar usuário ele já loga na seção, Assim obtem o usuário logado na
+            /*Quando criar usuário ele já loga na seção, Assim obtem o usuário logado na
             aplicação com o auth().currentUser, que vai poder disparar o email de vereficação*/
             let userF = auth().currentUser;
             let user = {};

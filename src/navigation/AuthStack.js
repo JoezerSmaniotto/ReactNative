@@ -22,7 +22,6 @@ function AuthStack() {
       <Stack.Screen name="SignUp" component={SignUp} options={signUpStyle} />
       <Stack.Screen
         name="ForgotPassWord"
-        s
         component={ForgotPassWord}
         options={forgotPassWordStyle}
       />

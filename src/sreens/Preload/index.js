@@ -1,14 +1,17 @@
-import React, {useEffect} from 'react';
-
-// import auth from '@react-native-firebase/auth';
+import React, {useContext, useEffect} from 'react';
+import {Alert} from 'react-native';
+import auth from '@react-native-firebase/auth';
 import {CommonActions} from '@react-navigation/routers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {ApiContext} from '../../context/ApiProvider';
 
 import {StyleSheet, SafeAreaView} from 'react-native';
 import {Image} from 'react-native-elements';
 import {COLORS} from '../../assets/colors';
 
 const Preload = ({navigation}) => {
+  const {getApi} = useContext(ApiContext);
+
   const getUserCache = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('user');
@@ -19,53 +22,58 @@ const Preload = ({navigation}) => {
   };
 
   const loginUser = async () => {
-    const user = await getUserCache();
-    if (user) {
+    try {
+      const user = await getUserCache();
+      if (user) {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'Home'}],
+          }),
+        );
+      }
+
+      // if (!user) {
+      //   navigation.dispatch(
+      //     CommonActions.reset({
+      //       index: 0,
+      //       routes: [{name: 'SignIn'}],
+      //     }),
+      //   );
+      // }
+
+      // NO CASO SE TIVER USER EM CACHE, TEM LOGAR O USER NO SISTEMA.
+      await auth().signInWithEmailAndPassword(user.email, user.pass);
+      /*
       navigation.dispatch(
         CommonActions.reset({
           index: 0,
           routes: [{name: 'Home'}],
         }),
       );
-      // auth() // NO CASO SE TIVER USER EM CACHE, TEM LOGAR O USER NO SISTEMA.
-      //   .signInWithEmailAndPassword(user.email, user.pass)
-      //   .then(() => {
-      //     // navigation.dispatch(
-      //     //   CommonActions.reset({
-      //     //     index: 0,
-      //     //     routes: [{name: 'Home'}],
-      //     //   }),
-      //     // );
-      //   })
-      //   .catch(e => {
-      //     console.log('SignIn: erro em entrar: ' + e);
-      //     switch (e.code) {
-      //       case 'auth/user-not-found':
-      //         Alert.alert('Erro', 'Usuário não cadastrado.');
-      //         break;
-      //       case 'auth/wrong-password':
-      //         Alert.alert('Erro', 'Erro na senha.');
-      //         break;
-      //       case 'auth/invalid-email':
-      //         Alert.alert('Erro', 'Email inválido.');
-      //         break;
-      //       case 'auth/user-disabled':
-      //         Alert.alert('Erro', 'Usuário desabilitado.');
-      //         break;
-      //     }
-      //   });
-    } else {
-      // navigation.dispatch(
-      //   CommonActions.reset({
-      //     index: 0,
-      //     routes: [{name: 'SignIn'}],
-      //   }),
-      // );
+      */
+    } catch (e) {
+      console.log('SignIn: erro em entrar: ' + e);
+      switch (e.code) {
+        case 'auth/user-not-found':
+          Alert.alert('Erro', 'Usuário não cadastrado.');
+          break;
+        case 'auth/wrong-password':
+          Alert.alert('Erro', 'Erro na senha.');
+          break;
+        case 'auth/invalid-email':
+          Alert.alert('Erro', 'Email inválido.');
+          break;
+        case 'auth/user-disabled':
+          Alert.alert('Erro', 'Usuário desabilitado.');
+          break;
+      }
     }
   };
 
   useEffect(() => {
     loginUser();
+    getApi();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
