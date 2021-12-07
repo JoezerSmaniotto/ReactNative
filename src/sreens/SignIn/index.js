@@ -36,17 +36,18 @@ const SignIn = ({navigation}) => {
     //  GUARDO EM CACHE OS DADOS
     try {
       value.pass = pass;
+      console.log('storeUserCache => VALUE: ', value);
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem('user', jsonValue); // guarda em cache com a chave Users
 
       // Apos cachear os dados irá mandar para o rota quando logado
       setLoading(false);
-      // navigation.dispatch(
-      //   CommonActions.reset({
-      //     index: 0,
-      //     routes: [{name: 'Home'}],
-      //   }),
-      // );
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'Home'}],
+        }),
+      );
     } catch (e) {
       console.log('Sign: erro em storeUserCache : ' + e);
     }
@@ -115,13 +116,8 @@ const SignIn = ({navigation}) => {
   };
 
   const cadastrar = () => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{name: 'SignUp'}],
-      }),
-    );
     navigation.navigate('SignUp');
+    // navigation.navigate('SignUp');
   };
 
   return (

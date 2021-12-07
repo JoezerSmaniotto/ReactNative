@@ -15,7 +15,8 @@ const Preload = ({navigation}) => {
   const getUserCache = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('user');
-      return jsonValue !== null ? JSON.parse(jsonValue) : null;
+      console.log('getUserCache => jsonValue', jsonValue);
+      return jsonValue ? JSON.parse(jsonValue) : null;
     } catch (e) {
       console.log('Home: erro em getUserCache : ' + e);
     }
@@ -24,34 +25,26 @@ const Preload = ({navigation}) => {
   const loginUser = async () => {
     try {
       const user = await getUserCache();
+      console.log('loginUser => user : ');
+      console.log(user);
+
       if (user) {
+        await auth().signInWithEmailAndPassword(user.email, user.pass);
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
             routes: [{name: 'Home'}],
           }),
         );
+      } else {
+        // Caso não tenha usuário
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{name: 'SignIn'}],
+          }),
+        );
       }
-
-      // if (!user) {
-      //   navigation.dispatch(
-      //     CommonActions.reset({
-      //       index: 0,
-      //       routes: [{name: 'SignIn'}],
-      //     }),
-      //   );
-      // }
-
-      // NO CASO SE TIVER USER EM CACHE, TEM LOGAR O USER NO SISTEMA.
-      await auth().signInWithEmailAndPassword(user.email, user.pass);
-      /*
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{name: 'Home'}],
-        }),
-      );
-      */
     } catch (e) {
       console.log('SignIn: erro em entrar: ' + e);
       switch (e.code) {

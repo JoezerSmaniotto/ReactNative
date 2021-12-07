@@ -51,13 +51,8 @@ const SignUp = ({navigation}) => {
                         ' para verificação.',
                     );
                     // Apos ter enviado o email de verificação, redireciona para o SignIn
-                    setLoading(false);
-                    navigation.dispatch(
-                      CommonActions.reset({
-                        index: 0,
-                        routes: [{name: 'SignIn'}],
-                      }),
-                    );
+                    // setLoading(false);
+                    navigation.goBack(); // Volta Para o SignIn no caso para logar
                   })
                   .catch(e => {
                     console.log('SignUp, cadastrar: ', e);
