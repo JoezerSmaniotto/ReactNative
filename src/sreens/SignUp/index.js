@@ -9,7 +9,7 @@ import firestore from '@react-native-firebase/firestore';
 import MeuButton from '../../components/MeuButton';
 import Loading from '../../components/Loading';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {Input} from 'react-native-elements';
+import {Input, Image, Text} from 'react-native-elements';
 const SignUp = ({navigation}) => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -99,7 +99,15 @@ const SignUp = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <View>
+        <View style={styles.div}>
+          <Image
+            style={styles.image}
+            source={require('../../assets/images/logoIvet.png')}
+            accessibilityLabel="logo do app"
+          />
+          <Text h3 style={{marginTop: 30}}>
+            Cadastre-se
+          </Text>
           <Input
             // label="Nome Completo"
             placeholder="Nome Completo"
@@ -168,6 +176,13 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     backgroundColor: COLORS.white,
   },
+  div: {
+    marginTop: 30,
+    // backgroundColor: 'blue',
+    width: '95%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 
   input: {
     width: '95%',
@@ -177,5 +192,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingLeft: 2,
     paddingBottom: 1,
+  },
+  image: {
+    width: 150,
+    height: 150,
+    margin: 5,
+    borderRadius: 5,
   },
 });

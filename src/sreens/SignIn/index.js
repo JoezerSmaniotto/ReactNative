@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   },
   textEsqueceuSenha: {
     fontSize: 15,
-    color: COLORS.accentSecundary,
+    color: COLORS.primary,
     alignSelf: 'flex-end',
     marginTop: 10,
     marginBottom: 10,
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
   },
   textCadastrarSe: {
     fontSize: 16,
-    color: COLORS.accentSecundary,
+    color: COLORS.primary,
     marginLeft: 5,
   },
 });
