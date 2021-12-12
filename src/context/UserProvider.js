@@ -3,6 +3,7 @@ import {ToastAndroid} from 'react-native';
 import auth from '@react-native-firebase/auth';
 
 import {ApiContext} from '../context/ApiProvider';
+import {ApiAuthContext} from '../context/ApiAuthProvider';
 import {AuthUserContext} from '../context/AuthUserProvider';
 
 export const UserContext = createContext({});
@@ -11,6 +12,7 @@ export const UserProvider = ({children}) => {
   const [userE, setUserE] = useState([]);
   const [errorMessage, setErrorMessage] = useState({});
   const {api} = useContext(ApiContext);
+  const {apiAuth} = useContext(ApiAuthContext);
   const {setUser, signOut} = useContext(AuthUserContext);
 
   const showToast = message => {
@@ -89,13 +91,11 @@ export const UserProvider = ({children}) => {
   const deleteUser = async val => {
     try {
       await api.delete('/users/' + val);
-
       signOut();
       auth().currentUser.delete();
-
+      await apiAuth.post('accounts:delete', {idToken: val});
       showToast('Usuario excluído.');
-      setUser(null);
-      getUser();
+      setUser(null); // valida
     } catch (response) {
       setErrorMessage(response);
       console.log('Erro ao deleteUser via API.');

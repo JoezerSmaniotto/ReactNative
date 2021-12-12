@@ -4,12 +4,17 @@ import {Text} from 'react-native-elements';
 import {COLORS} from '../../assets/colors';
 import {SafeAreaView, StyleSheet, ScrollView, View} from 'react-native';
 import {UserContext} from '../../context/UserProvider';
+import {AuthUserContext} from '../../context/AuthUserProvider';
 import auth from '@react-native-firebase/auth';
 import MeuButton from '../../components/MeuButton';
+
 import {Input} from 'react-native-elements';
+import {CommonActions} from '@react-navigation/routers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const User = ({route, navigation}) => {
   const {getUser, userE, updateUser, deleteUser} = useContext(UserContext);
+  const {signOut} = useContext(AuthUserContext);
 
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -68,6 +73,13 @@ const User = ({route, navigation}) => {
   const excluir = async () => {
     console.log('-- -- -- Exlcuir Conta -- -- --');
     await deleteUser(userE.uid);
+    AsyncStorage.removeItem('user'); // deleta na cache
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'SignIn'}],
+      }),
+    );
   };
 
   return (
@@ -122,6 +134,8 @@ const User = ({route, navigation}) => {
           <MeuButton texto={disabled ? 'Editar' : 'Salvar'} onClick={editar} />
 
           <MeuButton texto="Excluir Conta" onClick={excluir} />
+
+          <MeuButton texto="SAIR" onClick={() => signOut()} />
         </View>
       </ScrollView>
       {/* {loading && <Loading />} */}

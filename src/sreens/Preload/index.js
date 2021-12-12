@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth';
 import {CommonActions} from '@react-navigation/routers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ApiContext} from '../../context/ApiProvider';
+import {ApiAuthContext} from '../../context/ApiAuthProvider';
 
 import {StyleSheet, SafeAreaView} from 'react-native';
 import {Image} from 'react-native-elements';
@@ -11,6 +12,7 @@ import {COLORS} from '../../assets/colors';
 
 const Preload = ({navigation}) => {
   const {getApi} = useContext(ApiContext);
+  const {getAuthApi} = useContext(ApiAuthContext);
 
   const getUserCache = async () => {
     try {
@@ -67,6 +69,7 @@ const Preload = ({navigation}) => {
   useEffect(() => {
     loginUser();
     getApi();
+    getAuthApi();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
