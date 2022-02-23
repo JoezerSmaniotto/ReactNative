@@ -17,7 +17,7 @@ const Preload = ({navigation}) => {
   const getUserCache = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('user');
-      console.log('getUserCache => jsonValue', jsonValue);
+      // console.log('getUserCache => jsonValue', jsonValue);
       return jsonValue ? JSON.parse(jsonValue) : null;
     } catch (e) {
       console.log('Home: erro em getUserCache : ' + e);
@@ -27,8 +27,8 @@ const Preload = ({navigation}) => {
   const loginUser = async () => {
     try {
       const user = await getUserCache();
-      console.log('loginUser => user : ');
-      console.log(user);
+      // console.log('loginUser => user : ');
+      // console.log(user);
 
       if (user) {
         await auth().signInWithEmailAndPassword(user.email, user.pass);

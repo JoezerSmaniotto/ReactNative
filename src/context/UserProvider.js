@@ -70,8 +70,6 @@ export const UserProvider = ({children}) => {
   // };
 
   const updateUser = async val => {
-    // console.log('---- E D I T A R ----');
-    // console.log(val);
     try {
       await api.patch('/users/' + val.uid, {
         fields: {

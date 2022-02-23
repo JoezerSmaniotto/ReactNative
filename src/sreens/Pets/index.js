@@ -1,19 +1,29 @@
-import React, {useState, useEffect, useCallback, useContext} from 'react';
-import {Text} from 'react-native-elements';
-import {COLORS} from '../../assets/colors';
-import {SafeAreaView, StyleSheet, Alert, ScrollView} from 'react-native';
-import {ApiContext} from '../../context/ApiProvider';
+import React, {useState, useEffect, useContext} from 'react';
+import {SafeAreaView, StyleSheet, ScrollView} from 'react-native';
+import {FAB, Input, Button, Text} from 'react-native-elements';
+import {Picker} from '@react-native-picker/picker';
 import {View} from 'react-native';
-import {FAB, Input, Button} from 'react-native-elements';
+
 import Modal from '../../components/modal';
+import CardPet from '../../components/CardPet';
+import {COLORS} from '../../assets/colors';
 import {UserContext} from '../../context/UserProvider';
-import {AuthUserContext} from '../../context/AuthUserProvider';
+import {ApiContext} from '../../context/ApiProvider';
+import {PetContext} from '../../context/PetProvider';
 
 const Pets = ({navigation}) => {
   const {getApi} = useContext(ApiContext);
   const [visible, setVisible] = useState(false);
-  const [dadosPet, setDadosPet] = useState('');
-  const {getUser, userE, updateUser, deleteUser} = useContext(UserContext);
+  const [dadosPet, setDadosPet] = useState({
+    raca: 'pitBull',
+    sexo: 'femea',
+    nome: '',
+    infAdi: '',
+    imagemPet: '',
+  });
+
+  const {getUser, userE} = useContext(UserContext);
+  const {savePet, deletePet, getPets, petsList} = useContext(PetContext);
 
   useEffect(() => {
     getApi(); // Obtem o Objeto de acesso a API REST (Do Firebase)
@@ -25,7 +35,13 @@ const Pets = ({navigation}) => {
   };
 
   useEffect(() => {
+    getPets();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   const onchangeDados = novosDados => {
@@ -35,17 +51,31 @@ const Pets = ({navigation}) => {
     }));
   };
 
-  const sendDados = useCallback(async () => {
-    let pets = userE?.pets?.length > 0 ? [...userE?.pets] : [];
-    if (pets?.length === 0) {
-      pets.push(dadosPet);
-      console.log('-- pets: ', pets);
-      let user = {...userE, pets: [...pets]};
-      console.log('userE: => ', userE);
-      console.log('userPet: ', user);
-      await updateUser(user);
-    }
-  }, [userE, dadosPet, updateUser]);
+  const sendDados = async () => {
+    console.log('sendDados: ', dadosPet);
+    await savePet(dadosPet, userE, () => {
+      clearDadosForm();
+      setVisible(false);
+    });
+  };
+
+  const clearDadosForm = () => {
+    setDadosPet({
+      raca: 'pitBull',
+      sexo: 'femea',
+      nome: '',
+      infAdi: '',
+      imagemPet: '',
+    });
+  };
+
+  // const deletePet = async () => {
+  //   console.log('sendDados: ', sendDados);
+  //   await savePet(dadosPet, userE, () => {
+  //     setVisible(true);
+  //   });
+
+  // };
 
   // const editar = useCallback(async () => {
   //   // console.log('-- -- -- EDITAR -- -- --');
@@ -65,66 +95,113 @@ const Pets = ({navigation}) => {
   //   }
   // }, [disabled, nome, email]);
 
+  const openCard = dados => {
+    setDadosPet({
+      uid: dados.uid,
+      nome: dados.nome,
+      raca: dados.raca,
+      sexo: dados.sexo,
+      infAdi: dados.infAdi,
+      imagemPet: dados.imagemPet,
+    });
+    setVisible(true);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* <ScrollView style={{flex: 1}}> */}
-      <View style={styles.divSuperior}>
-        <Text h1 style={styles.texto}>
-          Pets
-        </Text>
+      <View />
+      <FAB
+        visible={true}
+        icon={{name: 'add', color: 'white'}}
+        color={COLORS.primary}
+        style={{position: 'absolute', bottom: 8, right: 8, zIndex: 100}}
+        onPress={() => {
+          setVisible(true);
+        }}
+      />
 
-        {/* </ScrollView> */}
-        <FAB
-          visible={true}
-          icon={{name: 'add', color: 'white'}}
-          color={COLORS.primary}
-          style={{position: 'absolute', bottom: 8, right: 8}}
-          onPress={() => {
-            setVisible(true);
-          }}
-        />
+      <ScrollView style={{width: '100%'}}>
+        <>
+          <View>
+            {petsList.map(item => {
+              return (
+                <CardPet
+                  deletePet={() => {
+                    deletePet(item.uid);
+                  }}
+                  dados={item}
+                  open={() => openCard(item)}
+                  key={item.uid}
+                />
+              );
+            })}
+          </View>
 
-        <Modal
-          title={'Crição/Edição'}
-          visible={visible}
-          setVisible={setVisible}>
-          <Input
-            label="Nome"
-            // placeholder="teste@gmail.com"
-            onChangeText={e => onchangeDados({nome: e})}
-            keyboardType="default"
-            value={dadosPet.nome}
-            style={{width: '100%'}}
-            // leftIcon={{type: 'font-awesome', name: 'envelope'}}
-            // returnKeyType="next"
-            // onEndEditing={() => this.passTextInput.focus()}
-          />
-          <Input
-            label="Raça"
-            // placeholder="teste@gmail.com"
-            onChangeText={e => onchangeDados({raca: e})}
-            keyboardType="default"
-            value={dadosPet.raca}
-            // leftIcon={{type: 'font-awesome', name: 'envelope'}}
-            // returnKeyType="next"
-            // onEndEditing={() => this.passTextInput.focus()}
-          />
-          <Button
-            title="Salvar"
-            onPress={sendDados}
-            buttonStyle={styles.button}
-          />
-          <Button
-            title="Cancelar"
-            onPress={() => {
-              setVisible(false);
-            }}
-            buttonStyle={styles.button}
-          />
-        </Modal>
-      </View>
+          <Modal
+            title={'Crição/Edição'}
+            visible={visible}
+            setVisible={setVisible}>
+            <Input
+              label="Nome"
+              // placeholder="teste@gmail.com"
+              onChangeText={e => onchangeDados({nome: e})}
+              keyboardType="default"
+              value={dadosPet.nome}
+              style={{width: '100%'}}
+              // leftIcon={{type: 'font-awesome', name: 'envelope'}}
+              // returnKeyType="next"
+              // onEndEditing={() => this.passTextInput.focus()}
+            />
+            <Text>Raça</Text>
+            <Picker
+              selectedValue={dadosPet.raca}
+              onValueChange={(itemValue, itemIndex) =>
+                onchangeDados({raca: itemValue})
+              }>
+              <Picker.Item label="PitBull" value="pitBull" />
+              <Picker.Item label="Vira-Lata" value="viraLata" />
+              <Picker.Item label="Poodle" value="poodle" />
+              <Picker.Item label="Buldogue" value="buldogue" />
+              <Picker.Item label="Golden Retriever" value="goldenRetriever" />
+            </Picker>
 
-      {/* </ScrollView > */}
+            <Text>Sexo</Text>
+            <Picker
+              selectedValue={dadosPet.sexo}
+              onValueChange={(itemValue, itemIndex) =>
+                onchangeDados({sexo: itemValue})
+              }>
+              <Picker.Item label="Fêmea" value="femea" />
+              <Picker.Item label="Macho" value="macho" />
+            </Picker>
+            <Input
+              label="Informações Adicionais"
+              placeholder="Informe o que você jugla relegante saber"
+              onChangeText={e => onchangeDados({infAdi: e})}
+              keyboardType="default"
+              value={dadosPet.infAdi}
+              style={{width: '100%'}}
+              // leftIcon={{type: 'font-awesome', name: 'envelope'}}
+              // returnKeyType="next"
+              // onEndEditing={() => this.passTextInput.focus()}
+            />
+
+            <Button
+              title="Salvar"
+              onPress={sendDados}
+              buttonStyle={styles.button}
+            />
+            <Button
+              title="Cancelar"
+              onPress={() => {
+                clearDadosForm();
+                setVisible(false);
+              }}
+              buttonStyle={styles.button}
+            />
+          </Modal>
+        </>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -136,7 +213,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'red',
   },
   divSuperior: {
     flex: 1,
@@ -147,8 +223,14 @@ const styles = StyleSheet.create({
   },
   texto: {
     color: COLORS.primary,
+    textAlign: 'center',
   },
   button: {
     margin: 5,
+  },
+  textInput: {
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
   },
 });

@@ -36,7 +36,7 @@ const SignIn = ({navigation}) => {
     //  GUARDO EM CACHE OS DADOS
     try {
       value.pass = pass;
-      console.log('storeUserCache => VALUE: ', value);
+      // console.log('storeUserCache => VALUE: ', value);
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem('user', jsonValue); // guarda em cache com a chave Users
 
