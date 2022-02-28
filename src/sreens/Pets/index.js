@@ -1,8 +1,18 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {SafeAreaView, StyleSheet, ScrollView} from 'react-native';
+import ImageResizer from 'react-native-image-resizer';
+import {
+  SafeAreaView,
+  StyleSheet,
+  ScrollView,
+  View,
+  Image,
+  Button as buttonImage,
+  Alert,
+} from 'react-native';
 import {FAB, Input, Button, Text} from 'react-native-elements';
 import {Picker} from '@react-native-picker/picker';
-import {View} from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
 
 import Modal from '../../components/modal';
 import CardPet from '../../components/CardPet';
@@ -14,12 +24,15 @@ import {PetContext} from '../../context/PetProvider';
 const Pets = ({navigation}) => {
   const {getApi} = useContext(ApiContext);
   const [visible, setVisible] = useState(false);
+  const [imageUri, setImageUri] = useState('');
+
   const [dadosPet, setDadosPet] = useState({
     raca: 'pitBull',
     sexo: 'femea',
     nome: '',
     infAdi: '',
     imagemPet: '',
+    imagemPetParceial: '',
   });
 
   const {getUser, userE} = useContext(UserContext);
@@ -51,9 +64,8 @@ const Pets = ({navigation}) => {
     }));
   };
 
-  const sendDados = async () => {
-    console.log('sendDados: ', dadosPet);
-    await savePet(dadosPet, userE, () => {
+  const sendDados = async (urlImageParcialPet, urlCompletaPet) => {
+    await savePet(dadosPet, userE, urlImageParcialPet, urlCompletaPet, () => {
       clearDadosForm();
       setVisible(false);
     });
@@ -66,6 +78,7 @@ const Pets = ({navigation}) => {
       nome: '',
       infAdi: '',
       imagemPet: '',
+      imagemPetParceial: '',
     });
   };
 
@@ -78,21 +91,6 @@ const Pets = ({navigation}) => {
   // };
 
   // const editar = useCallback(async () => {
-  //   // console.log('-- -- -- EDITAR -- -- --');
-  //   // console.log('NOME => ', nome);
-  //   // console.log('email => ', email);
-  //   // console.log('----------');
-  //   setDisabled(!disabled);
-  //   if (userE.nome !== nome) {
-  //     let userUpdate = {
-  //       uid: userE.uid,
-  //       nome: nome,
-  //       email: userE.email,
-  //     };
-  //     if (!disabled) {
-  //       await updateUser(userUpdate);
-  //     }
-  //   }
   // }, [disabled, nome, email]);
 
   const openCard = dados => {
@@ -106,6 +104,87 @@ const Pets = ({navigation}) => {
     });
     setVisible(true);
   };
+
+  const takePicker = () => {
+    const options = {
+      storageOptions: {
+        title: 'Selecionar  uma imagem',
+        skipBackup: true,
+        path: 'images',
+        mediaType: 'photo',
+      },
+      // includeBase64: true,
+    };
+
+    launchCamera(options, response => {
+      if (response.errorCode) {
+        console.log('errorMessage-> ', response.errorMessage);
+      } else if (response.didCancel) {
+        console.log('User Cancel Photograph:');
+      } else {
+        const path = response?.assets[0]?.uri;
+        setImageUri(path);
+      }
+    });
+  };
+
+  const selectImage = () => {
+    const options = {
+      storageOptions: {
+        title: 'Tirar uma foto',
+        skipBackup: true,
+        path: 'images',
+        mediaType: 'photo',
+      },
+      // includeBase64: true,
+    };
+
+    launchImageLibrary(options, response => {
+      // Imagem
+      // response.assets[0]?.uri;
+      if (response.errorCode) {
+        console.log('Image picker Error:', response.errorMessage);
+      } else if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else {
+        const path = response.assets[0].uri;
+        setImageUri(path);
+      }
+    });
+  };
+
+  async function sendImageDatabase(data) {
+    let imageRefact = await ImageResizer.createResizedImage(
+      imageUri,
+      200,
+      350,
+      'PNG',
+      100,
+    );
+    const urlImageParcialPet = `images/${userE.uid}/${userE.nome}/pets${dadosPet.nome}.jpeg`;
+    // setDadosPet({...dadosPet, imagemPetParceial: urlImageParcialPet});
+    const task = storage().ref(urlImageParcialPet).putFile(imageRefact?.uri);
+    await task.on('state_changed', taskSnapshot => {
+      console.log(
+        'Transf:\n' +
+          `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+    });
+    await task;
+    // .then(() => {
+    try {
+      const urlCompletaPet = await storage()
+        .ref(urlImageParcialPet)
+        .getDownloadURL();
+      sendDados(urlImageParcialPet, urlCompletaPet);
+      // })
+    } catch (e) {
+      console.log(' Catch  Task =>');
+      setDadosPet({...dadosPet, imagemPet: ''});
+      Alert.alert('Erro !', 'Impossivel salvar seu post, tente mais tarde!!');
+      console.error(e);
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -141,6 +220,38 @@ const Pets = ({navigation}) => {
             title={'Crição/Edição'}
             visible={visible}
             setVisible={setVisible}>
+            <Image
+              source={{
+                uri:
+                  imageUri !== ''
+                    ? imageUri
+                    : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAXusGK_JYWv_WvhPl9PAVKb7g71ny6lRMiA&usqp=CAUss',
+              }}
+              style={{
+                alignSelf: 'center',
+                height: 100,
+                width: 100,
+                borderRadius: 100,
+                borderWidth: 2,
+                borderColor: 'black',
+              }}
+            />
+
+            <Button
+              title={'Selecionar Imagem'}
+              onPress={() => {
+                selectImage();
+              }}
+              buttonStyle={styles.button}
+            />
+
+            <Button
+              title={'Tirar foto'}
+              onPress={() => {
+                takePicker();
+              }}
+              buttonStyle={styles.button}
+            />
             <Input
               label="Nome"
               // placeholder="teste@gmail.com"
@@ -164,7 +275,6 @@ const Pets = ({navigation}) => {
               <Picker.Item label="Buldogue" value="buldogue" />
               <Picker.Item label="Golden Retriever" value="goldenRetriever" />
             </Picker>
-
             <Text>Sexo</Text>
             <Picker
               selectedValue={dadosPet.sexo}
@@ -185,10 +295,9 @@ const Pets = ({navigation}) => {
               // returnKeyType="next"
               // onEndEditing={() => this.passTextInput.focus()}
             />
-
             <Button
               title="Salvar"
-              onPress={sendDados}
+              onPress={sendImageDatabase}
               buttonStyle={styles.button}
             />
             <Button

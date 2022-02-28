@@ -32,6 +32,7 @@ export const PetProvider = ({children}) => {
               infAdi: doc.data().infAdi,
               donoPet: doc.data().donoPet,
               imagemPet: doc.data().imagemPet,
+              imagemPetParceial: doc.data().imagemPetParceial,
               adotado: doc.data().adotado,
             };
             d.push(pet);
@@ -47,7 +48,13 @@ export const PetProvider = ({children}) => {
     return unsubscribe;
   };
 
-  const savePet = async (pet, user, retorno) => {
+  const savePet = async (
+    pet,
+    user,
+    urlImageParcialPet,
+    urlCompletaPet,
+    retorno,
+  ) => {
     await firestore()
       .collection('pets')
       .doc(pet.uid)
@@ -58,7 +65,8 @@ export const PetProvider = ({children}) => {
           sexo: pet.sexo,
           infAdi: pet.infAdi,
           donoPet: user,
-          imagemPet: pet.imagemPet !== undefined ? pet.imagemPet : '',
+          imagemPet: urlCompletaPet,
+          urlImageParcialPet: urlImageParcialPet,
           adotado: false,
         },
         {merge: true},

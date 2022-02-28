@@ -10,7 +10,10 @@ const CardPet = ({deletePet, dados, open}) => {
       <Card.Image
         style={{padding: 0}}
         source={{
-          uri: 'https://i0.statig.com.br/bancodeimagens/br/4j/48/br4j4845bvi3ygylo5wnhk84v.jpg',
+          uri:
+            dados.imagemPet !== ''
+              ? dados.imagemPet
+              : 'https://i0.statig.com.br/bancodeimagens/br/4j/48/br4j4845bvi3ygylo5wnhk84v.jpg',
         }}
       />
       <Text style={{marginBottom: 10}}>
