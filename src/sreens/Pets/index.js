@@ -25,6 +25,7 @@ const Pets = ({navigation}) => {
   const {getApi} = useContext(ApiContext);
   const [visible, setVisible] = useState(false);
   const [imageUri, setImageUri] = useState('');
+  const [petsPesquisa, setPetsPesquisa] = useState([]);
 
   const [dadosPet, setDadosPet] = useState({
     raca: 'pitBull',
@@ -186,9 +187,27 @@ const Pets = ({navigation}) => {
     }
   }
 
+  const pesquisaPetPorNome = nome => {
+    const filterNames = petsList.filter(pet => {
+      return pet.nome.toLocaleLowerCase().includes(nome.toLocaleLowerCase());
+    });
+    setPetsPesquisa(filterNames);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <View />
+      <View style={{width: '100%'}}>
+        <Text h3 style={{textAlign: 'center'}}>
+          Seus Pets
+        </Text>
+
+        <Input
+          placeholder="Pequise por nome"
+          onChangeText={t => pesquisaPetPorNome(t)}
+          keyboardType="default"
+          style={styles.input}
+        />
+      </View>
       <FAB
         visible={true}
         icon={{name: 'add', color: 'white'}}
@@ -202,18 +221,32 @@ const Pets = ({navigation}) => {
       <ScrollView style={{width: '100%'}}>
         <>
           <View>
-            {petsList.map(item => {
-              return (
-                <CardPet
-                  deletePet={() => {
-                    deletePet(item.uid);
-                  }}
-                  dados={item}
-                  open={() => openCard(item)}
-                  key={item.uid}
-                />
-              );
-            })}
+            {petsPesquisa.length === 0 &&
+              petsList.map(item => {
+                return (
+                  <CardPet
+                    deletePet={() => {
+                      deletePet(item.uid);
+                    }}
+                    dados={item}
+                    open={() => openCard(item)}
+                    key={item.uid}
+                  />
+                );
+              })}
+            {petsPesquisa.length > 0 &&
+              petsPesquisa.map(item => {
+                return (
+                  <CardPet
+                    deletePet={() => {
+                      deletePet(item.uid);
+                    }}
+                    dados={item}
+                    open={() => openCard(item)}
+                    key={item.uid}
+                  />
+                );
+              })}
           </View>
 
           <Modal
@@ -341,5 +374,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
     elevation: 3,
+  },
+  input: {
+    width: '95%',
+    height: 50,
+    borderBottomColor: COLORS.grey,
+    borderBottomWidth: 2,
+    fontSize: 16,
+    paddingLeft: 2,
+    paddingBottom: 1,
   },
 });
