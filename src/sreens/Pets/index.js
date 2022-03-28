@@ -34,6 +34,8 @@ const Pets = ({navigation}) => {
     infAdi: '',
     imagemPet: '',
     imagemPetParceial: '',
+    latitude: '',
+    longitude: '',
   });
 
   const {getUser, userE} = useContext(UserContext);
@@ -66,6 +68,11 @@ const Pets = ({navigation}) => {
   };
 
   const sendDados = async (urlImageParcialPet, urlCompletaPet) => {
+    // console.log('--------------------SEND DADOS--------');
+    // console.log('urlImageParcialPet: ', urlImageParcialPet);
+    // console.log('urlCompletaPet: ', urlCompletaPet);
+    // console.log('dadosPet: ', dadosPet);
+    // console.log('userE: ', userE);
     await savePet(dadosPet, userE, urlImageParcialPet, urlCompletaPet, () => {
       clearDadosForm();
       setVisible(false);
@@ -80,6 +87,8 @@ const Pets = ({navigation}) => {
       infAdi: '',
       imagemPet: '',
       imagemPetParceial: '',
+      latitude: '',
+      longitude: '',
     });
   };
 
@@ -102,6 +111,8 @@ const Pets = ({navigation}) => {
       sexo: dados.sexo,
       infAdi: dados.infAdi,
       imagemPet: dados.imagemPet,
+      latitude: dados.latitude,
+      longitude: dados.longitude,
     });
     setVisible(true);
   };
@@ -163,6 +174,7 @@ const Pets = ({navigation}) => {
       100,
     );
     const urlImageParcialPet = `images/${userE.uid}/${userE.nome}/pets${dadosPet.nome}.jpeg`;
+    // console.log('urlImageParcialPet: ', urlImageParcialPet);
     // setDadosPet({...dadosPet, imagemPetParceial: urlImageParcialPet});
     const task = storage().ref(urlImageParcialPet).putFile(imageRefact?.uri);
     await task.on('state_changed', taskSnapshot => {
@@ -171,20 +183,23 @@ const Pets = ({navigation}) => {
           `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
       );
     });
-    await task;
-    // .then(() => {
-    try {
-      const urlCompletaPet = await storage()
-        .ref(urlImageParcialPet)
-        .getDownloadURL();
-      sendDados(urlImageParcialPet, urlCompletaPet);
-      // })
-    } catch (e) {
-      console.log(' Catch  Task =>');
-      setDadosPet({...dadosPet, imagemPet: ''});
-      Alert.alert('Erro !', 'Impossivel salvar seu post, tente mais tarde!!');
-      console.error(e);
-    }
+
+    task
+      .then(async () => {
+        // try {
+        const urlCompletaPet = await storage()
+          .ref(urlImageParcialPet)
+          .getDownloadURL();
+        console.log('urlImageParcialPet: ', urlImageParcialPet);
+        console.log('urlCompletaPet: ', urlCompletaPet);
+        sendDados(urlImageParcialPet, urlCompletaPet);
+      })
+      .catch(e => {
+        console.log(' Catch  Task =>');
+        Alert.alert('Erro !', 'Impossivel salvar seu post, tente mais tarde!!');
+        // setDadosPet({...dadosPet, imagemPet: ''});
+        console.error(e);
+      });
   }
 
   const pesquisaPetPorNome = nome => {
@@ -253,94 +268,117 @@ const Pets = ({navigation}) => {
             title={'Crição/Edição'}
             visible={visible}
             setVisible={setVisible}>
-            <Image
-              source={{
-                uri:
-                  imageUri !== ''
-                    ? imageUri
-                    : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAXusGK_JYWv_WvhPl9PAVKb7g71ny6lRMiA&usqp=CAUss',
-              }}
-              style={{
-                alignSelf: 'center',
-                height: 100,
-                width: 100,
-                borderRadius: 100,
-                borderWidth: 2,
-                borderColor: 'black',
-              }}
-            />
+            <ScrollView style={{width: '100%'}}>
+              <Image
+                source={{
+                  uri:
+                    imageUri !== ''
+                      ? imageUri
+                      : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAXusGK_JYWv_WvhPl9PAVKb7g71ny6lRMiA&usqp=CAUss',
+                }}
+                style={{
+                  alignSelf: 'center',
+                  height: 100,
+                  width: 100,
+                  borderRadius: 100,
+                  borderWidth: 2,
+                  borderColor: 'black',
+                }}
+              />
+              <Button
+                title={'Selecionar Imagem'}
+                onPress={() => {
+                  selectImage();
+                }}
+                buttonStyle={styles.button}
+              />
+              <Button
+                title={'Tirar foto'}
+                onPress={() => {
+                  takePicker();
+                }}
+                buttonStyle={styles.button}
+              />
+              <Input
+                label="Nome"
+                // placeholder="teste@gmail.com"
+                onChangeText={e => onchangeDados({nome: e})}
+                keyboardType="default"
+                value={dadosPet.nome}
+                style={{width: '100%'}}
+                // leftIcon={{type: 'font-awesome', name: 'envelope'}}
+                // returnKeyType="next"
+                // onEndEditing={() => this.passTextInput.focus()}
+              />
+              <Text>Raça</Text>
+              <Picker
+                selectedValue={dadosPet.raca}
+                onValueChange={(itemValue, itemIndex) =>
+                  onchangeDados({raca: itemValue})
+                }>
+                <Picker.Item label="PitBull" value="pitBull" />
+                <Picker.Item label="Vira-Lata" value="viraLata" />
+                <Picker.Item label="Poodle" value="poodle" />
+                <Picker.Item label="Buldogue" value="buldogue" />
+                <Picker.Item label="Golden Retriever" value="goldenRetriever" />
+              </Picker>
+              <Text>Sexo</Text>
+              <Picker
+                selectedValue={dadosPet.sexo}
+                onValueChange={(itemValue, itemIndex) =>
+                  onchangeDados({sexo: itemValue})
+                }>
+                <Picker.Item label="Fêmea" value="femea" />
+                <Picker.Item label="Macho" value="macho" />
+              </Picker>
+              <Input
+                label="Informações Adicionais"
+                placeholder="Informe o que você jugla relegante saber"
+                onChangeText={e => onchangeDados({infAdi: e})}
+                keyboardType="default"
+                value={dadosPet.infAdi}
+                style={{width: '100%'}}
+                // leftIcon={{type: 'font-awesome', name: 'envelope'}}
+                // returnKeyType="next"
+                // onEndEditing={() => this.passTextInput.focus()}
+              />
+              <Input
+                label="Latitude"
+                placeholder="Longitude em decimal"
+                onChangeText={e => onchangeDados({latitude: e})}
+                keyboardType="numeric"
+                value={dadosPet.latitude}
+                style={{width: '100%'}}
+                // leftIcon={{type: 'font-awesome', name: 'envelope'}}
+                // returnKeyType="next"
+                // onEndEditing={() => this.passTextInput.focus()}
+              />
 
-            <Button
-              title={'Selecionar Imagem'}
-              onPress={() => {
-                selectImage();
-              }}
-              buttonStyle={styles.button}
-            />
-
-            <Button
-              title={'Tirar foto'}
-              onPress={() => {
-                takePicker();
-              }}
-              buttonStyle={styles.button}
-            />
-            <Input
-              label="Nome"
-              // placeholder="teste@gmail.com"
-              onChangeText={e => onchangeDados({nome: e})}
-              keyboardType="default"
-              value={dadosPet.nome}
-              style={{width: '100%'}}
-              // leftIcon={{type: 'font-awesome', name: 'envelope'}}
-              // returnKeyType="next"
-              // onEndEditing={() => this.passTextInput.focus()}
-            />
-            <Text>Raça</Text>
-            <Picker
-              selectedValue={dadosPet.raca}
-              onValueChange={(itemValue, itemIndex) =>
-                onchangeDados({raca: itemValue})
-              }>
-              <Picker.Item label="PitBull" value="pitBull" />
-              <Picker.Item label="Vira-Lata" value="viraLata" />
-              <Picker.Item label="Poodle" value="poodle" />
-              <Picker.Item label="Buldogue" value="buldogue" />
-              <Picker.Item label="Golden Retriever" value="goldenRetriever" />
-            </Picker>
-            <Text>Sexo</Text>
-            <Picker
-              selectedValue={dadosPet.sexo}
-              onValueChange={(itemValue, itemIndex) =>
-                onchangeDados({sexo: itemValue})
-              }>
-              <Picker.Item label="Fêmea" value="femea" />
-              <Picker.Item label="Macho" value="macho" />
-            </Picker>
-            <Input
-              label="Informações Adicionais"
-              placeholder="Informe o que você jugla relegante saber"
-              onChangeText={e => onchangeDados({infAdi: e})}
-              keyboardType="default"
-              value={dadosPet.infAdi}
-              style={{width: '100%'}}
-              // leftIcon={{type: 'font-awesome', name: 'envelope'}}
-              // returnKeyType="next"
-              // onEndEditing={() => this.passTextInput.focus()}
-            />
-            <Button
-              title="Salvar"
-              onPress={sendImageDatabase}
-              buttonStyle={styles.button}
-            />
-            <Button
-              title="Cancelar"
-              onPress={() => {
-                clearDadosForm();
-                setVisible(false);
-              }}
-              buttonStyle={styles.button}
-            />
+              <Input
+                label="Longitude"
+                placeholder="Longitude em decimal"
+                onChangeText={e => onchangeDados({longitude: e})}
+                keyboardType="numeric"
+                value={dadosPet.longitude}
+                style={{width: '100%'}}
+                // leftIcon={{type: 'font-awesome', name: 'envelope'}}
+                // returnKeyType="next"
+                // onEndEditing={() => this.passTextInput.focus()}
+              />
+              <Button
+                title="Salvar"
+                onPress={sendImageDatabase}
+                buttonStyle={styles.button}
+              />
+              <Button
+                title="Cancelar"
+                onPress={() => {
+                  clearDadosForm();
+                  setVisible(false);
+                }}
+                buttonStyle={styles.button}
+              />
+            </ScrollView>
           </Modal>
         </>
       </ScrollView>

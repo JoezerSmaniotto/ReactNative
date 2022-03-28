@@ -6,6 +6,7 @@ import Home from '../sreens/Home';
 import Preload from '../sreens/Preload';
 import Pets from '../sreens/Pets';
 import User from '../sreens/User';
+import PetsMap from '../sreens/PetsMap';
 import SignIn from '../sreens/SignIn';
 import SignUp from '../sreens/SignUp';
 import ForgotPassWord from '../sreens/ForgotPassWord';
@@ -24,6 +25,7 @@ function AppStack() {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Pets" component={Pets} options={petsStyle} />
       <Stack.Screen name="User" component={User} options={userStyle} />
+      <Stack.Screen name="PetsMap" component={User} options={userStyle} />
       <Stack.Screen name="SignIn" component={SignIn} options={signInStyle} />
 
       <Stack.Screen name="SignUp" component={SignUp} options={signUpStyle} />

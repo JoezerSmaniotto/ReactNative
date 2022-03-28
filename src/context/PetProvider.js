@@ -34,6 +34,8 @@ export const PetProvider = ({children}) => {
               imagemPet: doc.data().imagemPet,
               imagemPetParceial: doc.data().imagemPetParceial,
               adotado: doc.data().adotado,
+              latitude: doc.data().latitude,
+              longitude: doc.data().longitude,
             };
             d.push(pet);
           });
@@ -68,6 +70,8 @@ export const PetProvider = ({children}) => {
           imagemPet: urlCompletaPet,
           urlImageParcialPet: urlImageParcialPet,
           adotado: false,
+          latitude: pet.latitude,
+          longitude: pet.longitude,
         },
         {merge: true},
       )
