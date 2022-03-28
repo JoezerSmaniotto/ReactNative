@@ -46,6 +46,11 @@ const Pets = ({navigation}) => {
     // eslint-disable-next-line
   }, []);
 
+  useEffect(() => {
+    getApi(); // Obtem o Objeto de acesso a API REST (Do Firebase)
+    // eslint-disable-next-line
+  }, [petsList]);
+
   const fetchData = async () => {
     await getUser();
   };
@@ -190,8 +195,8 @@ const Pets = ({navigation}) => {
         const urlCompletaPet = await storage()
           .ref(urlImageParcialPet)
           .getDownloadURL();
-        console.log('urlImageParcialPet: ', urlImageParcialPet);
-        console.log('urlCompletaPet: ', urlCompletaPet);
+        // console.log('urlImageParcialPet: ', urlImageParcialPet);
+        // console.log('urlCompletaPet: ', urlCompletaPet);
         sendDados(urlImageParcialPet, urlCompletaPet);
       })
       .catch(e => {
