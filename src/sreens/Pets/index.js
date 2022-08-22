@@ -9,9 +9,10 @@ import {
   Button as buttonImage,
   Alert,
 } from 'react-native';
-import {FAB, Input, Button, Text} from 'react-native-elements';
+import {FAB, Input, Button, Text, ButtonGroup} from 'react-native-elements';
 import {Picker} from '@react-native-picker/picker';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import storage from '@react-native-firebase/storage';
 
 import Modal from '../../components/modal';
@@ -29,7 +30,8 @@ const Pets = ({navigation}) => {
 
   const [dadosPet, setDadosPet] = useState({
     raca: 'pitBull',
-    sexo: 'femea',
+    sexo: 0,
+    tipo: 0,
     nome: '',
     infAdi: '',
     imagemPet: '',
@@ -38,6 +40,8 @@ const Pets = ({navigation}) => {
     longitude: '',
   });
 
+  const [selectSexo, setSelectSexo] = useState(0);
+  const [tipoPet, setTipoPet] = useState(0);
   const {getUser, userE} = useContext(UserContext);
   const {savePet, deletePet, getPets, petsList} = useContext(PetContext);
 
@@ -84,10 +88,11 @@ const Pets = ({navigation}) => {
     });
   };
 
-  const clearDadosForm = () => {
+  const clearDadosForm = isModal => {
     setDadosPet({
       raca: 'pitBull',
-      sexo: 'femea',
+      sexo: 0,
+      tipo: 0,
       nome: '',
       infAdi: '',
       imagemPet: '',
@@ -95,6 +100,10 @@ const Pets = ({navigation}) => {
       latitude: '',
       longitude: '',
     });
+    setImageUri('');
+    if (isModal) {
+      setVisible(false);
+    }
   };
 
   // const deletePet = async () => {
@@ -114,11 +123,13 @@ const Pets = ({navigation}) => {
       nome: dados.nome,
       raca: dados.raca,
       sexo: dados.sexo,
+      tipo: dados.tipo,
       infAdi: dados.infAdi,
       imagemPet: dados.imagemPet,
       latitude: dados.latitude,
       longitude: dados.longitude,
     });
+    setImageUri(dados.imagemPet);
     setVisible(true);
   };
 
@@ -315,6 +326,26 @@ const Pets = ({navigation}) => {
                 // returnKeyType="next"
                 // onEndEditing={() => this.passTextInput.focus()}
               />
+              <ButtonGroup
+                buttons={[
+                  <FontAwesome5 name="dog" color={COLORS.primary} size={25} />,
+                  <FontAwesome5 name="cat" color={COLORS.primary} size={25} />,
+                ]}
+                selectedIndex={dadosPet.tipo}
+                onPress={e => {
+                  onchangeDados({tipo: e});
+                }}
+                containerStyle={{marginBottom: 15}}
+              />
+
+              <ButtonGroup
+                buttons={['Macho', 'Fêmea']}
+                selectedIndex={dadosPet.sexo}
+                onPress={e => {
+                  onchangeDados({sexo: e});
+                }}
+                containerStyle={{marginBottom: 15}}
+              />
               <Text>Raça</Text>
               <Picker
                 selectedValue={dadosPet.raca}
@@ -326,15 +357,6 @@ const Pets = ({navigation}) => {
                 <Picker.Item label="Poodle" value="poodle" />
                 <Picker.Item label="Buldogue" value="buldogue" />
                 <Picker.Item label="Golden Retriever" value="goldenRetriever" />
-              </Picker>
-              <Text>Sexo</Text>
-              <Picker
-                selectedValue={dadosPet.sexo}
-                onValueChange={(itemValue, itemIndex) =>
-                  onchangeDados({sexo: itemValue})
-                }>
-                <Picker.Item label="Fêmea" value="femea" />
-                <Picker.Item label="Macho" value="macho" />
               </Picker>
               <Input
                 label="Informações Adicionais"
@@ -378,8 +400,7 @@ const Pets = ({navigation}) => {
               <Button
                 title="Cancelar"
                 onPress={() => {
-                  clearDadosForm();
-                  setVisible(false);
+                  clearDadosForm(true);
                 }}
                 buttonStyle={styles.button}
               />

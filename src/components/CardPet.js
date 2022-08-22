@@ -1,6 +1,7 @@
 import React from 'react';
 import {StyleSheet, Image} from 'react-native';
 import {Text, Card, Button, Icon} from 'react-native-elements';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const CardPet = ({deletePet, dados, open}) => {
   return (
@@ -16,13 +17,11 @@ const CardPet = ({deletePet, dados, open}) => {
               : 'https://i0.statig.com.br/bancodeimagens/br/4j/48/br4j4845bvi3ygylo5wnhk84v.jpg',
         }}
       />
-      <Text style={{marginBottom: 10}}>
+      <Text style={{marginBottom: 10, marginTop: 10}}>
         Nome: {dados.nome} Raça: {dados.raca}
       </Text>
       <Button
-        icon={
-          <Icon name="code" color="#ffffff" iconStyle={{marginRight: 10}} />
-        }
+        icon={<FontAwesome5 name="edit" color={'#ffffff'} size={18} />}
         buttonStyle={{
           borderRadius: 0,
           marginLeft: 0,
@@ -35,9 +34,7 @@ const CardPet = ({deletePet, dados, open}) => {
         }}
       />
       <Button
-        icon={
-          <Icon name="code" color="#ffffff" iconStyle={{marginRight: 10}} />
-        }
+        icon={<FontAwesome5 name="trash-alt" color={'#ffffff'} size={18} />}
         buttonStyle={{
           borderRadius: 0,
           marginLeft: 0,

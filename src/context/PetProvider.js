@@ -23,12 +23,13 @@ export const PetProvider = ({children}) => {
           let d = [];
           querySnapshot.forEach(doc => {
             // doc.data() is never undefined for query doc snapshots
-            //console.log(doc.id, ' =>  ', doc.data());
+            // console.log(doc.id, ' =>  ', doc.data());
             const pet = {
               uid: doc.id,
               nome: doc.data().nome,
               raca: doc.data().raca,
-              sexo: doc.data().sexo,
+              sexo: doc.data().sexo === 'macho' ? 0 : 1,
+              tipo: doc.data().tipo === 'cao' ? 0 : 1,
               infAdi: doc.data().infAdi,
               donoPet: doc.data().donoPet,
               imagemPet: doc.data().imagemPet,
@@ -64,7 +65,8 @@ export const PetProvider = ({children}) => {
         {
           nome: pet.nome,
           raca: pet.raca,
-          sexo: pet.sexo,
+          sexo: pet.sexo === 0 ? 'macho' : 'fêmea',
+          tipo: pet.tipo === 0 ? 'cao' : 'gato',
           infAdi: pet.infAdi,
           donoPet: user,
           imagemPet: urlCompletaPet,
