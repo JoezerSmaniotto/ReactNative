@@ -9,6 +9,7 @@ import {
   Button as buttonImage,
   Alert,
 } from 'react-native';
+import {Text as Texto} from './styles';
 import {FAB, Input, Button, Text, ButtonGroup} from 'react-native-elements';
 import {Picker} from '@react-native-picker/picker';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -16,6 +17,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import storage from '@react-native-firebase/storage';
 
 import Modal from '../../components/modal';
+import ModalSelect from '../../components/ModalSelect';
 import CardPet from '../../components/CardPet';
 import {COLORS} from '../../assets/colors';
 import {UserContext} from '../../context/UserProvider';
@@ -25,6 +27,7 @@ import {PetContext} from '../../context/PetProvider';
 const Pets = ({navigation}) => {
   const {getApi} = useContext(ApiContext);
   const [visible, setVisible] = useState(false);
+  const [openModalMin, setOpenModalMin] = useState(true);
   const [imageUri, setImageUri] = useState('');
   const [petsPesquisa, setPetsPesquisa] = useState([]);
 
@@ -280,6 +283,12 @@ const Pets = ({navigation}) => {
               })}
           </View>
 
+          <ModalSelect
+            title={'Teste'}
+            visible={openModalMin}
+            setVisible={setOpenModalMin}
+          />
+
           <Modal
             title={'Crição/Edição'}
             visible={visible}
@@ -346,7 +355,7 @@ const Pets = ({navigation}) => {
                 }}
                 containerStyle={{marginBottom: 15}}
               />
-              <Text>Raça</Text>
+              {/* <Text>Raça</Text>
               <Picker
                 selectedValue={dadosPet.raca}
                 onValueChange={(itemValue, itemIndex) =>
@@ -357,7 +366,34 @@ const Pets = ({navigation}) => {
                 <Picker.Item label="Poodle" value="poodle" />
                 <Picker.Item label="Buldogue" value="buldogue" />
                 <Picker.Item label="Golden Retriever" value="goldenRetriever" />
-              </Picker>
+              </Picker> */}
+              {/* <Text onPress={() => setOpenModalMin(true)} style={styles.text}>
+                Raça
+              </Text> */}
+              <Text
+                style={{
+                  marginLeft: 8,
+                  fontWeight: 'bold',
+                  color: 'grey',
+                  fontSize: 14,
+                }}>
+                Raça
+              </Text>
+              <Texto onPress={() => setOpenModalMin(true)}>
+                {dadosPet.raca}
+              </Texto>
+              {/* <Input
+                label="Raça"
+                placeholder="Informe a raça"
+                onChangeText={e => onchangeDados({raca: e})}
+                keyboardType="numeric"
+                value={dadosPet.raca}
+                style={{width: '100%'}}
+                onPress={() => setOpenModalMin(true)}
+                // leftIcon={{type: 'font-awesome', name: 'envelope'}}
+                // returnKeyType="next"
+                // onEndEditing={() => this.passTextInput.focus()}
+              /> */}
               <Input
                 label="Informações Adicionais"
                 placeholder="Informe o que você jugla relegante saber"
@@ -430,6 +466,18 @@ const styles = StyleSheet.create({
   texto: {
     color: COLORS.primary,
     textAlign: 'center',
+  },
+  text: {
+    width: '95%',
+    height: '26',
+    fontSize: '16',
+    color: 'blue',
+    border: '0 solid grey',
+    borderBottomWidth: '',
+    paddingLeft: '2',
+    paddingBottom: '1',
+    marginBottom: '1',
+    marginTop: '10',
   },
   button: {
     margin: 5,
