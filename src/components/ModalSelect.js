@@ -1,18 +1,36 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {Button, Overlay, Icon, Input} from 'react-native-elements';
 import {ScrollView, View, Text, StyleSheet} from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {RacaPetContext} from '../context/RacaPetProvider';
 
 import RadioButton from './RadioButton';
-const ModalSelect = ({title, visible, setVisible, id, children}) => {
+const ModalSelect = ({title, visible, setVisible, id, children, tipoPet}) => {
+  const {getRacaPets, saveRacaPets} = useContext(RacaPetContext);
+  const [racaPet, setRacaPet] = useState('');
+  const [novaRacaPet, setNovaRacaPet] = useState('');
+
+  // useEffect(() => {
+  //   getRacaPets();
+  //   // eslint-disable-next-line
+  // }, []);
+
   const toggleOverlay = () => {
     // alert('oiii');
     setVisible(!visible);
   };
-  const [racaPet, setRacaPet] = useState('');
-  const [novaRacaPet, setNovaRacaPet] = useState('');
+
+  const criarNovaRaca = async () => {
+    console.log('***** CRIAR NOVA RAÇA *****');
+    const newRaca = {
+      nomeRaca: novaRacaPet,
+      tipoPet: tipoPet,
+    };
+    await saveRacaPets(newRaca, toggleOverlay);
+  };
+
   return (
     <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
       <View style={styles.container}>
@@ -33,8 +51,8 @@ const ModalSelect = ({title, visible, setVisible, id, children}) => {
         </View>
         <ScrollView style={{width: '100%'}}>
           {/* esta view aqui professor */}
-          <View style={styles.viewInput}>
-            {/* <Input
+          {/* <View style={styles.viewInput}>
+            <Input
               placeholder="Encontre a raça"
               leftIcon={<Fontisto name="search" color={'#f9ba08'} size={17} />}
               onChangeText={value => setRacaPet(value)}
@@ -54,11 +72,14 @@ const ModalSelect = ({title, visible, setVisible, id, children}) => {
               type={'solid'}
               containerStyle={{alignSelf: 'center', marginBottom: 9}}
               color="primary"
-            /> */}
+            />
+          </View> */}
+
+          <View style={styles.viewInput}>
             <Input
               placeholder="Informe a raça"
               leftIcon={
-                <MaterialIcons name="create" color={'#f9ba08'} size={20} />
+                <MaterialIcons name="create" color={'#f9ba08'} size={19} />
               }
               onChangeText={value => setNovaRacaPet(value)}
               value={novaRacaPet}
@@ -70,7 +91,7 @@ const ModalSelect = ({title, visible, setVisible, id, children}) => {
                   name="check"
                   color={'#000'}
                   size={19}
-                  onPress={() => toggleOverlay()}
+                  onPress={() => criarNovaRaca()}
                 />
               }
               type={'solid'}
@@ -78,6 +99,7 @@ const ModalSelect = ({title, visible, setVisible, id, children}) => {
               color="primary"
             />
           </View>
+
           <View style={styles.select}>
             {/* <Button
               icon={

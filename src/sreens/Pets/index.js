@@ -27,7 +27,7 @@ import {PetContext} from '../../context/PetProvider';
 const Pets = ({navigation}) => {
   const {getApi} = useContext(ApiContext);
   const [visible, setVisible] = useState(false);
-  const [openModalMin, setOpenModalMin] = useState(true);
+  const [openModalSelect, setOpenModalSelect] = useState(true);
   const [imageUri, setImageUri] = useState('');
   const [petsPesquisa, setPetsPesquisa] = useState([]);
 
@@ -285,8 +285,9 @@ const Pets = ({navigation}) => {
 
           <ModalSelect
             title={'Teste'}
-            visible={openModalMin}
-            setVisible={setOpenModalMin}
+            visible={openModalSelect}
+            setVisible={setOpenModalSelect}
+            tipoPet={dadosPet.tipo}
           />
 
           <Modal
@@ -367,7 +368,7 @@ const Pets = ({navigation}) => {
                 <Picker.Item label="Buldogue" value="buldogue" />
                 <Picker.Item label="Golden Retriever" value="goldenRetriever" />
               </Picker> */}
-              {/* <Text onPress={() => setOpenModalMin(true)} style={styles.text}>
+              {/* <Text onPress={() => setOpenModalSelect(true)} style={styles.text}>
                 Raça
               </Text> */}
               <Text
@@ -379,7 +380,7 @@ const Pets = ({navigation}) => {
                 }}>
                 Raça
               </Text>
-              <Texto onPress={() => setOpenModalMin(true)}>
+              <Texto onPress={() => setOpenModalSelect(true)}>
                 {dadosPet.raca}
               </Texto>
               {/* <Input
@@ -389,7 +390,7 @@ const Pets = ({navigation}) => {
                 keyboardType="numeric"
                 value={dadosPet.raca}
                 style={{width: '100%'}}
-                onPress={() => setOpenModalMin(true)}
+                onPress={() => setOpenModalSelect(true)}
                 // leftIcon={{type: 'font-awesome', name: 'envelope'}}
                 // returnKeyType="next"
                 // onEndEditing={() => this.passTextInput.focus()}
