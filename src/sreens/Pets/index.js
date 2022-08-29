@@ -27,12 +27,12 @@ import {PetContext} from '../../context/PetProvider';
 const Pets = ({navigation}) => {
   const {getApi} = useContext(ApiContext);
   const [visible, setVisible] = useState(false);
-  const [openModalSelect, setOpenModalSelect] = useState(true);
+  const [openModalSelect, setOpenModalSelect] = useState(false);
   const [imageUri, setImageUri] = useState('');
   const [petsPesquisa, setPetsPesquisa] = useState([]);
 
   const [dadosPet, setDadosPet] = useState({
-    raca: 'pitBull',
+    raca: 'Pitbull',
     sexo: 0,
     tipo: 0,
     nome: '',
@@ -71,6 +71,12 @@ const Pets = ({navigation}) => {
     fetchData();
     // eslint-disable-next-line
   }, []);
+
+  // useEffect(() => {
+  //   console.log('-------------I-----------');
+  //   console.log('dadosPet New Change: ', dadosPet);
+  //   console.log('------------F------------');
+  // }, [dadosPet]);
 
   const onchangeDados = novosDados => {
     setDadosPet(prevState => ({
@@ -288,10 +294,12 @@ const Pets = ({navigation}) => {
             visible={openModalSelect}
             setVisible={setOpenModalSelect}
             tipoPet={dadosPet.tipo}
+            racaDoPet={dadosPet.raca}
+            trocaRacaPet={onchangeDados}
           />
 
           <Modal
-            title={'Crição/Edição'}
+            title={'Criação/Edição'}
             visible={visible}
             setVisible={setVisible}>
             <ScrollView style={{width: '100%'}}>

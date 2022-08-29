@@ -16,7 +16,7 @@ export const RacaPetProvider = ({children}) => {
   const getRacaPets = async () => {
     const unsubscribe = firestore()
       .collection('species')
-      // .orderBy('nome')
+      .orderBy('nomeRacaPet')
       .onSnapshot(
         //inscrevendo um listener
         querySnapshot => {
@@ -25,9 +25,9 @@ export const RacaPetProvider = ({children}) => {
             // doc.data() is never undefined for query doc snapshots
             // console.log(doc.id, ' =>  ', doc.data());
             const racas = {
-              uid: doc.id,
-              nome: doc.data().nome,
-              raca: doc.data().raca,
+              uid: doc.uid,
+              nomeRacaPet: doc.data().nomeRacaPet,
+              tipoPet: doc.data().tipoPet,
             };
             d.push(racas);
           });
@@ -57,7 +57,7 @@ export const RacaPetProvider = ({children}) => {
       )
       .then(() => {
         showToast('Dados salvos.');
-        // retorno();
+        retorno();
         //getRacaPets //getPets(); --- ***** FAZER AQUI O getRacaPets Para atualizar a raças ****----
       })
       .catch(e => {
@@ -101,6 +101,7 @@ export const RacaPetProvider = ({children}) => {
         getRacaPets,
         saveRacaPets,
         deleteRacaPets,
+        racasList,
       }}>
       {children}
     </RacaPetContext.Provider>

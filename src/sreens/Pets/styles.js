@@ -4,7 +4,7 @@ export const Text = styled.Text`
   width: 95%;
   height: 26px;
   font-size: 16px;
-  color: blavk;
+  color: black;
   border: 0px solid grey;
   border-bottom-width: 1px;
   padding-left: 2px;

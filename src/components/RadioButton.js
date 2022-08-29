@@ -4,16 +4,17 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 // import {COLORS} from '../assets/colors';
 
-export const RadioButtonView = styled.TouchableHighlight`
+export const RadioButtonView = styled.TouchableOpacity`
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
   padding-left: 20px;
+  margin-rigth: 20px;
   padding-top: 10px;
 `;
 
 export const TextIcon = styled.Text`
-  font-size: 24px;
+  font-size: 18px;
   color: black;
 `;
 
@@ -22,11 +23,11 @@ const RadioButton = ({label, selected, onClick}, onPress) => {
   return (
     <RadioButtonView onPress={() => onClick(label)}>
       {selected ? (
-        <Icon name="radio-button-on-outline" size={25} color={'yellow'}>
+        <Icon name="radio-button-on-outline" size={18} color={'black'}>
           <TextIcon>{label}</TextIcon>
         </Icon>
       ) : (
-        <Icon name="radio-button-off-outline" size={25} color={'yellow'}>
+        <Icon name="radio-button-off-outline" size={18} color={'black'}>
           <TextIcon>{label}</TextIcon>
         </Icon>
       )}
