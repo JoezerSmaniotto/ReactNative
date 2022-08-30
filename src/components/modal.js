@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {Button, Overlay, Icon} from 'react-native-elements';
-import {View, Text, StyleSheet} from 'react-native';
+import {Button, Overlay, Icon, Text, useTheme} from 'react-native-elements';
+import {View, StyleSheet} from 'react-native';
 
 const Modal = ({title, visible, setVisible, id, children}) => {
   //   const [visible, setVisible] = useState(false);
-
+  const {theme} = useTheme();
   const toggleOverlay = () => {
     setVisible(!visible);
   };
@@ -14,7 +14,12 @@ const Modal = ({title, visible, setVisible, id, children}) => {
       isVisible={visible}
       onBackdropPress={toggleOverlay}
       fullScreen={true}>
-      <Text style={styles.textSecondary}>{title}</Text>
+      <Text
+        h4
+        style={styles.textSecondary}
+        h4Style={{color: theme.colors.black}}>
+        {title}
+      </Text>
       {children}
     </Overlay>
   );
@@ -38,7 +43,6 @@ const styles = StyleSheet.create({
   textSecondary: {
     marginBottom: 10,
     textAlign: 'center',
-    fontSize: 22,
   },
 });
 

@@ -244,7 +244,10 @@ const Pets = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={{width: '100%'}}>
-        <Text h3 style={{textAlign: 'center'}}>
+        <Text
+          h3
+          style={{textAlign: 'center'}}
+          h3Style={{color: theme.colors.black}}>
           Seus Pets
         </Text>
 
