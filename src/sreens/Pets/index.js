@@ -6,11 +6,17 @@ import {
   ScrollView,
   View,
   Image,
-  Button as buttonImage,
   Alert,
 } from 'react-native';
 import {Text as Texto} from './styles';
-import {FAB, Input, Button, Text, ButtonGroup} from 'react-native-elements';
+import {
+  FAB,
+  Input,
+  Button,
+  Text,
+  ButtonGroup,
+  useTheme,
+} from 'react-native-elements';
 import {Picker} from '@react-native-picker/picker';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -30,6 +36,7 @@ const Pets = ({navigation}) => {
   const [openModalSelect, setOpenModalSelect] = useState(false);
   const [imageUri, setImageUri] = useState('');
   const [petsPesquisa, setPetsPesquisa] = useState([]);
+  const {theme} = useTheme();
 
   const [dadosPet, setDadosPet] = useState({
     raca: 'Pitbull',
@@ -332,6 +339,7 @@ const Pets = ({navigation}) => {
                   takePicker();
                 }}
                 buttonStyle={styles.button}
+                type={'outline'}
               />
               <Input
                 label="Nome"
@@ -346,8 +354,16 @@ const Pets = ({navigation}) => {
               />
               <ButtonGroup
                 buttons={[
-                  <FontAwesome5 name="dog" color={COLORS.primary} size={25} />,
-                  <FontAwesome5 name="cat" color={COLORS.primary} size={25} />,
+                  <FontAwesome5
+                    name="dog"
+                    color={theme.colors.black}
+                    size={25}
+                  />,
+                  <FontAwesome5
+                    name="cat"
+                    color={theme.colors.black}
+                    size={25}
+                  />,
                 ]}
                 selectedIndex={dadosPet.tipo}
                 onPress={e => {
@@ -359,6 +375,7 @@ const Pets = ({navigation}) => {
               <ButtonGroup
                 buttons={['Macho', 'Fêmea']}
                 selectedIndex={dadosPet.sexo}
+                color={theme.colors.black}
                 onPress={e => {
                   onchangeDados({sexo: e});
                 }}
@@ -448,6 +465,7 @@ const Pets = ({navigation}) => {
                   clearDadosForm(true);
                 }}
                 buttonStyle={styles.button}
+                type={'outline'}
               />
             </ScrollView>
           </Modal>
@@ -490,6 +508,7 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 5,
+    borderWidth: 1,
   },
   textInput: {
     shadowOpacity: 0.22,
