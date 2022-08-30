@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   textSecondary: {
     marginBottom: 10,
     textAlign: 'center',
-    fontSize: 17,
+    fontSize: 22,
   },
 });
 
