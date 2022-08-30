@@ -6,6 +6,7 @@ import {
   Input,
   Tooltip,
   Text,
+  useTheme,
 } from 'react-native-elements';
 import {ScrollView, View, StyleSheet, Alert} from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
@@ -24,14 +25,12 @@ const ModalSelect = ({
   trocaRacaPet,
 }) => {
   const {getRacaPets, saveRacaPets, racasList} = useContext(RacaPetContext);
-  const [racaPet, setRacaPet] = useState('');
   const [novaRacaPet, setNovaRacaPet] = useState('');
-  const [disabledButaoNovaRacaPet, setdisabledButaoNovaRacaPet] =
+  const [disabledButtonNovaRacaPet, setdisabledButtonNovaRacaPet] =
     useState(false);
-  const [controleShowFristView, setControleShowFristView] = useState(false);
   const [racaSelecionadaPet, setRacaSelecionadaPet] = useState('');
-  const [apresentBotaoCriarNovaRaca, setApresentBotaoCriarNovaRaca] =
-    useState(false);
+  const [apresentaCriarNovaRaca, setApresentaCriarNovaRaca] = useState(false);
+  const {theme} = useTheme();
 
   useEffect(() => {
     getRacaPets();
@@ -49,18 +48,16 @@ const ModalSelect = ({
   }, [racaDoPet]);
 
   const toggleOverlay = () => {
-    setRacaPet('');
     setNovaRacaPet('');
-    setdisabledButaoNovaRacaPet(false);
-    setControleShowFristView(false);
-    setApresentBotaoCriarNovaRaca(false);
+    setdisabledButtonNovaRacaPet(false);
+    setApresentaCriarNovaRaca(false);
     setRacaSelecionadaPet('');
     setVisible(!visible);
   };
 
   const criarNovaRaca = async () => {
     if (novaRacaPet.length > 0) {
-      setdisabledButaoNovaRacaPet(true);
+      setdisabledButtonNovaRacaPet(true);
       const newRaca = {
         nomeRaca: novaRacaPet,
         tipoPet: tipoPet,
@@ -68,7 +65,6 @@ const ModalSelect = ({
       await saveRacaPets(newRaca, () => {
         trocaRacaPet({raca: novaRacaPet});
         toggleOverlay();
-        // setVisible(!visible);
       });
     } else {
       Alert.alert('Erro', 'Informe o nome da raça.');
@@ -84,8 +80,8 @@ const ModalSelect = ({
       }
       toggleOverlay();
     } else {
+      setApresentaCriarNovaRaca(true);
       setRacaSelecionadaPet(val);
-      setApresentBotaoCriarNovaRaca(true);
     }
   };
 
@@ -93,70 +89,46 @@ const ModalSelect = ({
     <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
       <View style={styles.container}>
         <View style={styles.viewButton}>
+          <>
+            {!apresentaCriarNovaRaca ? (
+              <Text
+                h4
+                h4Style={{color: theme.colors.black}}
+                containerStyle={{
+                  width: '85%',
+                  alignSelf: 'center',
+                }}>
+                Escolha a raça do Pet
+              </Text>
+            ) : (
+              <Text
+                h4
+                h4Style={{color: theme.colors.black}}
+                containerStyle={{
+                  width: '85%',
+                  alignSelf: 'center',
+                }}>
+                Cadastre uma raça!
+              </Text>
+            )}
+          </>
           <Button
             icon={
               <Fontisto
                 name="close"
-                color={'#000'}
+                color={{color: theme.colors.black}}
                 size={23}
                 onPress={() => toggleOverlay()}
               />
             }
             type={'solid'}
             buttonStyle={styles.buttonStyle}
-            containerStyle={styles.containerStyle}>
-            Criar raça
-          </Button>
+            containerStyle={styles.containerStyle}
+          />
         </View>
 
         <View style={styles.viewInput}>
-          {!controleShowFristView ? (
-            <>
-              {apresentBotaoCriarNovaRaca ? (
-                <>
-                  <Text
-                    h4
-                    containerStyle={{
-                      width: '85%',
-                      // display: 'inline-block',
-                      backgroundColor: 'red',
-                      alignSelf: 'center',
-                    }}>
-                    Cadastre uma raça!
-                  </Text>
-
-                  <Button
-                    icon={
-                      <MaterialIcons name="create" color={'#000'} size={15} />
-                    }
-                    onPress={() => setControleShowFristView(true)}
-                    type={'solid'}
-                    size="sm"
-                    containerStyle={{
-                      marginLeft: 5,
-                      alignSelf: 'center',
-                    }}
-                    titleStyle={{fontSize: 14}}
-                    color="primary"
-                    title={'Criar raça'}
-                  />
-                </>
-              ) : (
-                <>
-                  <Text
-                    h4
-                    containerStyle={{
-                      width: '85%',
-                      // display: 'inline-block',
-                      backgroundColor: 'red',
-                      alignSelf: 'center',
-                    }}>
-                    Escolha a raça!
-                  </Text>
-                </>
-              )}
-            </>
-          ) : (
+          {apresentaCriarNovaRaca && (
             <>
               <Input
                 placeholder="Informe a raça"
@@ -173,7 +145,7 @@ const ModalSelect = ({
                 type={'solid'}
                 containerStyle={{alignSelf: 'center', marginBottom: 9}}
                 // color="primary"
-                disabled={disabledButaoNovaRacaPet}
+                disabled={disabledButtonNovaRacaPet}
               />
             </>
           )}
@@ -183,7 +155,7 @@ const ModalSelect = ({
             {/* horizontal={true} */}
             <>
               {racasList.length > 0 &&
-                apresentBotaoCriarNovaRaca === false &&
+                apresentaCriarNovaRaca === false &&
                 racasList.map((raca, index) => {
                   return (
                     <RadioButton
@@ -216,8 +188,9 @@ const styles = StyleSheet.create({
   viewButton: {
     width: '100%',
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    flexDirection: 'row',
   },
   viewInput: {
     display: 'flex',

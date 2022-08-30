@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {useTheme} from 'react-native-elements';
 
 // import {COLORS} from '../assets/colors';
 
@@ -19,15 +20,21 @@ export const TextIcon = styled.Text`
 `;
 
 const RadioButton = ({label, selected, onClick}, onPress) => {
-  //console.log(label);
+  const {theme} = useTheme();
   return (
     <RadioButtonView onPress={() => onClick(label)}>
       {selected ? (
-        <Icon name="radio-button-on-outline" size={18} color={'black'}>
+        <Icon
+          name="radio-button-on-outline"
+          size={18}
+          color={theme.colors.primary}>
           <TextIcon>{label}</TextIcon>
         </Icon>
       ) : (
-        <Icon name="radio-button-off-outline" size={18} color={'black'}>
+        <Icon
+          name="radio-button-off-outline"
+          size={18}
+          color={theme.colors.black}>
           <TextIcon>{label}</TextIcon>
         </Icon>
       )}
