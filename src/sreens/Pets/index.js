@@ -20,10 +20,12 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import storage from '@react-native-firebase/storage';
 
 import Modal from '../../components/modal';
 import ModalSelect from '../../components/ModalSelect';
+import ModalMapa from '../../components/ModalMapa';
 import CardPet from '../../components/CardPet';
 import {COLORS} from '../../assets/colors';
 import {UserContext} from '../../context/UserProvider';
@@ -34,6 +36,7 @@ const Pets = ({navigation}) => {
   const {getApi} = useContext(ApiContext);
   const [visible, setVisible] = useState(false);
   const [openModalSelect, setOpenModalSelect] = useState(false);
+  const [openModalMapa, setOpenModaMapa] = useState(false);
   const [imageUri, setImageUri] = useState('');
   const [petsPesquisa, setPetsPesquisa] = useState([]);
   const {theme} = useTheme();
@@ -79,12 +82,6 @@ const Pets = ({navigation}) => {
     // eslint-disable-next-line
   }, []);
 
-  // useEffect(() => {
-  //   console.log('-------------I-----------');
-  //   console.log('dadosPet New Change: ', dadosPet);
-  //   console.log('------------F------------');
-  // }, [dadosPet]);
-
   const onchangeDados = novosDados => {
     setDadosPet(prevState => ({
       ...prevState,
@@ -92,6 +89,9 @@ const Pets = ({navigation}) => {
     }));
   };
 
+  useEffect(() => {
+    console.log('OKsdadosPet: ', dadosPet);
+  }, [dadosPet]);
   const sendDados = async (urlImageParcialPet, urlCompletaPet) => {
     // console.log('--------------------SEND DADOS--------');
     // console.log('urlImageParcialPet: ', urlImageParcialPet);
@@ -267,7 +267,7 @@ const Pets = ({navigation}) => {
 
       <ScrollView style={{width: '100%'}}>
         <>
-          <View>
+          <View style={{flex: 1}}>
             {petsPesquisa.length === 0 &&
               petsList.map(item => {
                 return (
@@ -295,7 +295,6 @@ const Pets = ({navigation}) => {
                 );
               })}
           </View>
-
           <ModalSelect
             title={'Teste'}
             visible={openModalSelect}
@@ -304,7 +303,6 @@ const Pets = ({navigation}) => {
             racaDoPet={dadosPet.raca}
             trocaRacaPet={onchangeDados}
           />
-
           <Modal
             title={'Criação/Edição'}
             visible={visible}
@@ -431,7 +429,8 @@ const Pets = ({navigation}) => {
                 // returnKeyType="next"
                 // onEndEditing={() => this.passTextInput.focus()}
               />
-              <Input
+
+              {/* <Input
                 label="Latitude"
                 placeholder="Longitude em decimal"
                 onChangeText={e => onchangeDados({latitude: e})}
@@ -441,9 +440,9 @@ const Pets = ({navigation}) => {
                 // leftIcon={{type: 'font-awesome', name: 'envelope'}}
                 // returnKeyType="next"
                 // onEndEditing={() => this.passTextInput.focus()}
-              />
+              /> */}
 
-              <Input
+              {/* <Input
                 label="Longitude"
                 placeholder="Longitude em decimal"
                 onChangeText={e => onchangeDados({longitude: e})}
@@ -453,7 +452,25 @@ const Pets = ({navigation}) => {
                 // leftIcon={{type: 'font-awesome', name: 'envelope'}}
                 // returnKeyType="next"
                 // onEndEditing={() => this.passTextInput.focus()}
+              /> */}
+
+              <Button
+                title="Informe a localização do Pet"
+                type="clear"
+                icon={
+                  <Ionicons
+                    name="location-sharp"
+                    color={theme.colors.black}
+                    size={20}
+                  />
+                }
+                iconRight
+                onPress={() => {
+                  setOpenModaMapa(true);
+                }}
+                buttonStyle={styles.button}
               />
+
               <Button
                 title="Salvar"
                 onPress={sendImageDatabase}
@@ -469,6 +486,19 @@ const Pets = ({navigation}) => {
               />
             </ScrollView>
           </Modal>
+
+          <ModalMapa
+            title={'MAPA'}
+            visible={openModalMapa}
+            setVisible={setOpenModaMapa}
+            updateLocalizacao={onchangeDados}
+            coordenadasRecebidas={{
+              latitude: dadosPet.latitude,
+              longitude: dadosPet.longitude,
+              nome: dadosPet.nome,
+              raca: dadosPet.raca,
+            }}
+          />
         </>
       </ScrollView>
     </SafeAreaView>
