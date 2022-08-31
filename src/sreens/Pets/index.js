@@ -106,7 +106,14 @@ const Pets = ({navigation}) => {
         setVisible(false);
       });
     } else {
-      Alert.alert('Erro !', `Preencha o campo ${campoNull}`);
+      if (campoNull === 'latitude' || campoNull === 'longitude') {
+        Alert.alert('Aviso !', 'Preencha a localização do Pet para salvar.');
+      } else {
+        Alert.alert(
+          'Aviso !',
+          `Preencha o campo ${campoNull} do Pet para salvar.`,
+        );
+      }
     }
   };
 
