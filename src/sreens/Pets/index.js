@@ -40,9 +40,8 @@ const Pets = ({navigation}) => {
   const [imageUri, setImageUri] = useState('');
   const [petsPesquisa, setPetsPesquisa] = useState([]);
   const {theme} = useTheme();
-
   const [dadosPet, setDadosPet] = useState({
-    raca: 'Pitbull',
+    raca: '',
     sexo: 0,
     tipo: 0,
     nome: '',
@@ -52,9 +51,9 @@ const Pets = ({navigation}) => {
     latitude: '',
     longitude: '',
   });
-
   const [selectSexo, setSelectSexo] = useState(0);
   const [tipoPet, setTipoPet] = useState(0);
+  const [disabledSalveModal, setDisabledSalveModal] = useState(false);
   const {getUser, userE} = useContext(UserContext);
   const {savePet, deletePet, getPets, petsList} = useContext(PetContext);
 
@@ -89,24 +88,31 @@ const Pets = ({navigation}) => {
     }));
   };
 
-  useEffect(() => {
-    console.log('OKsdadosPet: ', dadosPet);
-  }, [dadosPet]);
   const sendDados = async (urlImageParcialPet, urlCompletaPet) => {
-    // console.log('--------------------SEND DADOS--------');
-    // console.log('urlImageParcialPet: ', urlImageParcialPet);
-    // console.log('urlCompletaPet: ', urlCompletaPet);
-    // console.log('dadosPet: ', dadosPet);
-    // console.log('userE: ', userE);
-    await savePet(dadosPet, userE, urlImageParcialPet, urlCompletaPet, () => {
-      clearDadosForm();
-      setVisible(false);
-    });
+    let dadosNulos = false;
+    let campoNull = '';
+    for (var item in dadosPet) {
+      if (dadosPet[item] === '' || dadosPet[item] === null) {
+        if (item !== 'imagemPet' && item !== 'imagemPetParceial') {
+          dadosNulos = true;
+          campoNull = item;
+        }
+      }
+    }
+    if (!dadosNulos) {
+      setDisabledSalveModal(true);
+      await savePet(dadosPet, userE, urlImageParcialPet, urlCompletaPet, () => {
+        clearDadosForm();
+        setVisible(false);
+      });
+    } else {
+      Alert.alert('Erro !', `Preencha o campo ${campoNull}`);
+    }
   };
 
   const clearDadosForm = isModal => {
     setDadosPet({
-      raca: 'pitBull',
+      raca: '',
       sexo: 0,
       tipo: 0,
       nome: '',
@@ -116,6 +122,7 @@ const Pets = ({navigation}) => {
       latitude: '',
       longitude: '',
     });
+    setDisabledSalveModal(false);
     setImageUri('');
     if (isModal) {
       setVisible(false);
@@ -198,40 +205,47 @@ const Pets = ({navigation}) => {
   };
 
   async function sendImageDatabase(data) {
-    let imageRefact = await ImageResizer.createResizedImage(
-      imageUri,
-      200,
-      350,
-      'PNG',
-      100,
-    );
-    const urlImageParcialPet = `images/${userE.uid}/${userE.nome}/pets${dadosPet.nome}.jpeg`;
-    // console.log('urlImageParcialPet: ', urlImageParcialPet);
-    // setDadosPet({...dadosPet, imagemPetParceial: urlImageParcialPet});
-    const task = storage().ref(urlImageParcialPet).putFile(imageRefact?.uri);
-    await task.on('state_changed', taskSnapshot => {
-      console.log(
-        'Transf:\n' +
-          `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+    if (imageUri !== '') {
+      let imageRefact = await ImageResizer.createResizedImage(
+        imageUri,
+        200,
+        350,
+        'PNG',
+        100,
       );
-    });
-
-    task
-      .then(async () => {
-        // try {
-        const urlCompletaPet = await storage()
-          .ref(urlImageParcialPet)
-          .getDownloadURL();
-        // console.log('urlImageParcialPet: ', urlImageParcialPet);
-        // console.log('urlCompletaPet: ', urlCompletaPet);
-        sendDados(urlImageParcialPet, urlCompletaPet);
-      })
-      .catch(e => {
-        console.log(' Catch  Task =>');
-        Alert.alert('Erro !', 'Impossivel salvar seu post, tente mais tarde!!');
-        // setDadosPet({...dadosPet, imagemPet: ''});
-        console.error(e);
+      const urlImageParcialPet = `images/${userE.uid}/${userE.nome}/pets${dadosPet.nome}.jpeg`;
+      //console.log('urlImageParcialPet: ', urlImageParcialPet);
+      // setDadosPet({...dadosPet, imagemPetParceial: urlImageParcialPet});
+      const task = storage().ref(urlImageParcialPet).putFile(imageRefact?.uri);
+      await task.on('state_changed', taskSnapshot => {
+        console.log(
+          'Transf:\n' +
+            `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+        );
       });
+
+      task
+        .then(async () => {
+          // try {
+          const urlCompletaPet = await storage()
+            .ref(urlImageParcialPet)
+            .getDownloadURL();
+          // console.log('urlImageParcialPet: ', urlImageParcialPet);
+          // console.log('urlCompletaPet: ', urlCompletaPet);
+          sendDados(urlImageParcialPet, urlCompletaPet);
+        })
+        .catch(e => {
+          console.log(' Catch  Task =>');
+          Alert.alert(
+            'Erro !',
+            'Impossivel salvar seu post, tente mais tarde!!',
+          );
+          // setDadosPet({...dadosPet, imagemPet: ''});
+          console.error(e);
+        });
+    } else {
+      Alert.alert('Erro !', 'Selecione ou tire um foto do seu Pet');
+    }
   }
 
   const pesquisaPetPorNome = nome => {
@@ -402,9 +416,9 @@ const Pets = ({navigation}) => {
                   marginLeft: 8,
                   fontWeight: 'bold',
                   color: 'grey',
-                  fontSize: 14,
+                  fontSize: 15,
                 }}>
-                Raça
+                Selecione a Raça
               </Text>
               <Texto onPress={() => setOpenModalSelect(true)}>
                 {dadosPet.raca}
@@ -458,7 +472,11 @@ const Pets = ({navigation}) => {
               /> */}
 
               <Button
-                title="Informe a localização do Pet"
+                title={
+                  dadosPet?.latitude !== ''
+                    ? 'Alterar a localização do Pet'
+                    : 'Informe a localização do Pet'
+                }
                 type="clear"
                 icon={
                   <Ionicons
@@ -478,6 +496,7 @@ const Pets = ({navigation}) => {
                 title="Salvar"
                 onPress={sendImageDatabase}
                 buttonStyle={styles.button}
+                disabled={disabledSalveModal}
               />
               <Button
                 title="Cancelar"
@@ -500,6 +519,7 @@ const Pets = ({navigation}) => {
               longitude: dadosPet.longitude,
               nome: dadosPet.nome,
               raca: dadosPet.raca,
+              img: imageUri,
             }}
           />
         </>
@@ -508,7 +528,7 @@ const Pets = ({navigation}) => {
   );
 };
 
-export default Pets;
+export default React.memo(Pets);
 
 const styles = StyleSheet.create({
   container: {
