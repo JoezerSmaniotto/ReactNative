@@ -72,7 +72,6 @@ const ModalSelect = ({
   };
 
   const racaEscolhidaSelect = val => {
-    console.log('Raça Escolhida: ', val);
     if (val !== 'Outra') {
       if (racaDoPet !== 'val') {
         setRacaSelecionadaPet(val);
