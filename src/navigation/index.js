@@ -50,6 +50,15 @@ const theme = {
         color: 'red',
       },
     },
+    fonts: {
+      MontserratBold: 'Montserrat-Bold',
+      MontserratMedium: 'Montserrat-Medium',
+      MontserratRegular: 'Montserrat-Regular',
+      MontserratSemiBold: 'Montserrat-SemiBold',
+      RobotoBold: 'Roboto-Bold',
+      RobotoMedium: 'Roboto-Medium',
+      RobotoRegular: 'Roboto-Regular',
+    },
   },
 };
 

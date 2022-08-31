@@ -5,6 +5,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from '../sreens/Home';
 import Preload from '../sreens/Preload';
 import MyPets from '../sreens/MyPets';
+import Pets from '../sreens/Pets';
 import User from '../sreens/User';
 import PetsMap from '../sreens/PetsMap';
 import SignIn from '../sreens/SignIn';
@@ -24,6 +25,7 @@ function AppStack() {
       <Stack.Screen name="Preload" component={Preload} options={preloadStyle} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="MyPets" component={MyPets} options={petsStyle} />
+      <Stack.Screen name="Pets" component={Pets} options={petsStyle} />
       <Stack.Screen name="User" component={User} options={userStyle} />
       <Stack.Screen name="PetsMap" component={PetsMap} options={userStyle} />
       <Stack.Screen name="SignIn" component={SignIn} options={signInStyle} />
