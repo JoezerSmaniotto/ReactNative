@@ -23,14 +23,51 @@ export const ViewMarker = styled.TouchableHighlight`
   border-radius: 20px;
 `;
 
-//-----
+export const ViewButtonMap = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin-top: ${Dimensions.get('window').height - 180}px;
+  width: 70%;
+`;
+
+export const ButtonDefined = styled.TouchableHighlight`
+  justify-content: center;
+  align-items: center;
+  background-color: yellow;
+  border-width: 2px;
+  border-color: yellow;
+  width: 100%;
+  height: 45px;
+  border-radius: 25px;
+  margin-bottom: 10px;
+`;
+
+export const ViewCloseIcon = styled.View`
+  align-self: flex-end;
+  margin-top: -80%;
+`;
+
+export const ButtonGoBack = styled.TouchableHighlight`
+  justify-content: center;
+  align-items: center;
+  width: 70px;
+  height: 70px;
+`;
+
+export const TextButton = styled.Text`
+  font-weight: bold;
+  font-size: 18px;
+  color: black;
+`;
 
 const ModalMapa = ({
   title,
   visible,
   setVisible,
+  id,
   updateLocalizacao,
   coordenadasRecebidas,
+  handleClose,
 }) => {
   const [mapType, setMatType] = useState('standard');
   const [markers, setMarkers] = useState([]);
@@ -41,48 +78,58 @@ const ModalMapa = ({
   };
 
   const showToast = message => {
-    toggleOverlay();
     ToastAndroid.show(message, ToastAndroid.SHORT);
+    toggleOverlay();
   };
+  useEffect(() => {
+    console.log('coordenadasRecebidas: ', coordenadasRecebidas);
+  }, [coordenadasRecebidas]);
+
+  // useEffect(() => {
+  //   console.log('markers: ', markers);
+  // }, [markers]);
+
+  // useEffect(() => {
+  //   console.log('INICIALmarkers: ', markers);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   useEffect(() => {
-    let isMounted = true;
-    if (isMounted) {
-      if (
-        coordenadasRecebidas.latitude !== '' &&
-        coordenadasRecebidas.latitude !== null
-      ) {
-        let m = [];
-        m.push({
-          key: 'trtrw2455445gfg676',
-          coords: {
-            latitude: Number(coordenadasRecebidas.latitude), //dados.latitude
-            longitude: Number(coordenadasRecebidas.longitude), //dados.latitude
-          },
-          title: coordenadasRecebidas.nome, // dados.nome
-          description: coordenadasRecebidas.raca, ////../../assets/images/person_map_accent.png'
-          image:
-            coordenadasRecebidas.img !== ''
-              ? coordenadasRecebidas.img
-              : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAXusGK_JYWv_WvhPl9PAVKb7g71ny6lRMiA&usqp=CAUss',
-        });
-        setMarkers(m);
-      }
+    if (
+      coordenadasRecebidas.latitude !== '' &&
+      coordenadasRecebidas.latitude !== null
+    ) {
+      let m = [];
+      m.push({
+        key: 'trtrw2455445gfg676',
+        coords: {
+          latitude: Number(coordenadasRecebidas.latitude), //dados.latitude
+          longitude: Number(coordenadasRecebidas.longitude), //dados.latitude
+        },
+        title: coordenadasRecebidas.nome, // dados.nome
+        description: coordenadasRecebidas.raca, ////../../assets/images/person_map_accent.png'
+        image:
+          coordenadasRecebidas.img !== ''
+            ? coordenadasRecebidas.img
+            : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAXusGK_JYWv_WvhPl9PAVKb7g71ny6lRMiA&usqp=CAUss',
+      });
+      setMarkers(m);
     }
-
-    return () => {
-      // when component unmounts, set isMounted to false
-      setMarkers([]);
-      isMounted = false;
-    };
-  }, [coordenadasRecebidas]);
+  }, [coordenadasRecebidas, setMarkers]);
 
   const updateLocation = val => {
     updateLocalizacao({
       latitude: Number(val.nativeEvent.coordinate.latitude),
       longitude: Number(val.nativeEvent.coordinate.longitude),
     });
-    showToast('Local definido com sucesso!');
+    // Alert.alert(
+    //   'Coordenadas',
+    //   'latitude= ' +
+    //     val.nativeEvent.coordinate.latitude +
+    //     ' longitude= ' +
+    //     val.nativeEvent.coordinate.longitude,
+    // );
+    // toggleOverlay();
   };
 
   return (
@@ -147,6 +194,28 @@ const ModalMapa = ({
             }}
           />
         )}
+
+        {/* <ViewCloseIcon>
+          <ButtonGoBack
+            underlayColor="#translarent"
+            onPress={() => {
+              toggleOverlay();
+              handleClose();
+            }}>
+            <Icon name="close" size={40} color={'black'} />
+          </ButtonGoBack>
+        </ViewCloseIcon> */}
+        {markers.length > 0 ? (
+          <ViewButtonMap>
+            <ButtonDefined
+              onPress={() => showToast('Local definido com sucesso!')}
+              underlayColor={'yellow'}>
+              <TextButton>Definir local</TextButton>
+            </ButtonDefined>
+          </ViewButtonMap>
+        ) : (
+          <></>
+        )}
       </View>
     </Overlay>
   );
@@ -183,4 +252,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(ModalMapa);
+export default ModalMapa;
