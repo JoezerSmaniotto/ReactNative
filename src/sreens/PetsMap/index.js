@@ -1,8 +1,20 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {StyleSheet, View, Alert} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import styled from 'styled-components/native';
 
 import {PetContext} from '../../context/PetProvider';
+
+export const Picture = styled.Image`
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+`;
+export const ViewMarker = styled.TouchableHighlight`
+  width: 70px;
+  height: 70px;
+  border-radius: 20px;
+`;
 
 const MapStudentsTab = () => {
   const [mapType, setMatType] = useState('standard');
@@ -10,11 +22,9 @@ const MapStudentsTab = () => {
   const {petsList} = useContext(PetContext);
 
   useEffect(() => {
-    console.log('petsListEffects: ', petsList);
     let m = [];
     if (petsList.length > 0) {
       petsList.map((s, index) => {
-        //console.log(s);
         m.push({
           key: index,
           coords: {
@@ -23,37 +33,32 @@ const MapStudentsTab = () => {
           },
           title: s.nome,
           description: s.raca,
-          image: require('../../assets/images/person_map_accent.png'),
+          image: s.imagemPet, //require('../../assets/images/person_map_accent.png'),
         });
       });
-      console.log('M => ', m);
       setMarkers(m);
     }
   }, [petsList]);
-
-  useEffect(() => {
-    console.log('markers: ', markers);
-  }, [markers]);
 
   return (
     <View style={styles.container}>
       {markers.length >= 1 && (
         <MapView
           provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-          ref={map => (this.map = map)}
+          // ref={map => (this.map = map)}
           style={styles.map}
           mapType={mapType}
           showsUserLocation={true}
           followsUserLocation={true}
-          onPress={e => {
-            Alert.alert(
-              'Coordenadas',
-              'latitude= ' +
-                e.nativeEvent.coordinate.latitude +
-                ' longitude= ' +
-                e.nativeEvent.coordinate.longitude,
-            );
-          }}
+          // onPress={e => {
+          //   Alert.alert(
+          //     'Coordenadas',
+          //     'latitude= ' +
+          //       e.nativeEvent.coordinate.latitude +
+          //       ' longitude= ' +
+          //       e.nativeEvent.coordinate.longitude,
+          //   );
+          // }}
           initialRegion={{
             //região onde deve focar o mapa na inicialização
             latitude: -31.766108372781073,
@@ -69,8 +74,17 @@ const MapStudentsTab = () => {
                 title={marker.title}
                 description={marker.description}
                 draggable
-                image={marker.image}
-              />
+                // image={marker.image}
+              >
+                <ViewMarker>
+                  <Picture
+                    source={{
+                      uri: marker.image,
+                    }}
+                    style={{width: 50, height: 50, borderRadius: 10}}
+                  />
+                </ViewMarker>
+              </Marker>
             );
           })}
         </MapView>
