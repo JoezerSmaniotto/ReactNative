@@ -32,7 +32,7 @@ import {UserContext} from '../../context/UserProvider';
 import {ApiContext} from '../../context/ApiProvider';
 import {PetContext} from '../../context/PetProvider';
 
-const Pets = ({navigation}) => {
+const MyPets = ({navigation}) => {
   const {getApi} = useContext(ApiContext);
   const [visible, setVisible] = useState(false);
   const [openModalSelect, setOpenModalSelect] = useState(false);
@@ -535,7 +535,7 @@ const Pets = ({navigation}) => {
   );
 };
 
-export default React.memo(Pets);
+export default React.memo(MyPets);
 
 const styles = StyleSheet.create({
   container: {

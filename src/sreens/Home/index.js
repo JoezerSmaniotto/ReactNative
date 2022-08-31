@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {COLORS} from '../../assets/colors';
-import Pets from '../Pets';
+import MyPets from '../MyPets';
 import User from '../User';
 import PetsMap from '../PetsMap';
 
@@ -13,10 +13,10 @@ const Home = ({navigation}) => {
   return (
     <Tab.Navigator screenOptions={{headerShown: false}}>
       <Tab.Screen
-        name="Pets"
-        component={Pets}
+        name="MyPets"
+        component={MyPets}
         options={{
-          tabBarLabel: 'Pets',
+          tabBarLabel: 'MyPets',
           tabBarIcon: () => (
             <MaterialIcons name="pets" color={COLORS.primary} size={20} />
           ),
