@@ -25,7 +25,7 @@ export const RacaPetProvider = ({children}) => {
             // doc.data() is never undefined for query doc snapshots
             // console.log(doc.id, ' =>  ', doc.data());
             const racas = {
-              uid: doc.uid,
+              uid: doc.id,
               nomeRacaPet: doc.data().nomeRacaPet,
               tipoPet: doc.data().tipoPet,
             };
