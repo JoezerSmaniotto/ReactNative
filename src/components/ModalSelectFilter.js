@@ -149,4 +149,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModalSelectFilter;
+export default React.memo(ModalSelectFilter);
