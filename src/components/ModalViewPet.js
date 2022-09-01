@@ -4,6 +4,7 @@ import {View, StyleSheet} from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 const ModalViewPet = ({visible, setVisible, dados}) => {
   const {theme} = useTheme();
@@ -66,8 +67,8 @@ const ModalViewPet = ({visible, setVisible, dados}) => {
               </Text>
             </View>
             <View style={styles.InfoAdicionais}>
-              <Fontisto
-                name="intersex"
+              <FontAwesome5
+                name="venus-mars"
                 color={theme.colors.primary}
                 size={15}
               />
@@ -79,7 +80,11 @@ const ModalViewPet = ({visible, setVisible, dados}) => {
               </Text>
             </View>
             <View style={styles.InfoAdicionais}>
-              <Feather name="info" color={theme.colors.primary} size={15} />
+              <FontAwesome5
+                name="info-circle"
+                color={theme.colors.primary}
+                size={15}
+              />
               <Text
                 ellipsizeMode="tail"
                 numberOfLines={1}
@@ -154,7 +159,7 @@ const styles = StyleSheet.create({
   },
   textoEstiloSexoPet: {
     fontSize: 15,
-    marginLeft: 9,
+    marginLeft: 4,
   },
 });
 
