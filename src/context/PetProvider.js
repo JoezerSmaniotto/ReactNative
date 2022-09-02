@@ -33,10 +33,11 @@ export const PetProvider = ({children}) => {
               infAdi: doc.data().infAdi,
               donoPet: doc.data().donoPet,
               imagemPet: doc.data().imagemPet,
-              imagemPetParceial: doc.data().imagemPetParceial,
+              imagemPetParceial: doc.data().urlImagemParceialPets,
               adotado: doc.data().adotado,
               latitude: doc.data().latitude,
               longitude: doc.data().longitude,
+              favorite: doc.data().favorite,
             };
             d.push(pet);
           });
@@ -74,16 +75,36 @@ export const PetProvider = ({children}) => {
           adotado: false,
           latitude: pet.latitude,
           longitude: pet.longitude,
+          favorite: pet.favorite,
         },
         {merge: true},
       )
       .then(() => {
         showToast('Dados salvos.');
         retorno();
-        getPets();
+        // getPets();
       })
       .catch(e => {
         console.error('PetProvider, savePet: ' + e);
+      });
+  };
+
+  const favoritePetContext = async (idPet, favorite) => {
+    await firestore()
+      .collection('pets')
+      .doc(idPet)
+      .set(
+        {
+          favorite: favorite,
+        },
+        {merge: true},
+      )
+      .then(() => {
+        showToast('Dados salvos.');
+        getPets();
+      })
+      .catch(e => {
+        console.error('PetProvider, favoritePetContext: ' + e);
       });
   };
 
@@ -124,6 +145,7 @@ export const PetProvider = ({children}) => {
         deletePet,
         petsList,
         getPets,
+        favoritePetContext,
       }}>
       {children}
     </PetContext.Provider>

@@ -1,10 +1,28 @@
-import React, {useState} from 'react';
-import {SafeAreaView, ScrollView, View, StyleSheet, Alert} from 'react-native';
-import {Input, Image, Text, Button, useTheme} from 'react-native-elements';
+import React, {useState, useEffect, useContext} from 'react';
+import {View, StyleSheet, Alert} from 'react-native';
+import {Image, Text, Button, useTheme} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import ModalViewPet from './ModalViewPet';
+import {PetContext} from '../context/PetProvider';
 
-const CardPet = ({deletePet, dados, open}) => {
+const CardPet = ({dadosPet, user}) => {
   const {theme} = useTheme();
+  const {favoritePetContext} = useContext(PetContext);
+  const [openModalPetView, setOpenModalPetView] = useState(false);
+
+  const favoritePet = () => {
+    if (dadosPet.favorite.filter(item => item === user.uid).length > 0) {
+      let removeUserFavorite = dadosPet.favorite.filter(
+        item => item !== user.uid,
+      );
+      favoritePetContext(dadosPet.uid, removeUserFavorite);
+    } else {
+      let addUserFavorite = dadosPet.favorite;
+      addUserFavorite.push(user.uid);
+      favoritePetContext(dadosPet.uid, addUserFavorite);
+    }
+  };
+
   return (
     <View style={styles.cardPet}>
       <View style={styles.cardPetImg}>
@@ -12,7 +30,7 @@ const CardPet = ({deletePet, dados, open}) => {
           // resizeMode="center" // Contain
           style={styles.image}
           source={{
-            uri: 'https://i0.statig.com.br/bancodeimagens/br/4j/48/br4j4845bvi3ygylo5wnhk84v.jpg',
+            uri: dadosPet.imagemPet,
           }}
           accessibilityLabel="logo do app"
         />
@@ -25,33 +43,47 @@ const CardPet = ({deletePet, dados, open}) => {
             numberOfLines={1}
             style={{textAlign: 'center'}}
             h4Style={theme.colors.black}>
-            Encontre Pets
+            {dadosPet.nome}
           </Text>
-          <Text
-            h4
-            ellipsizeMode="tail"
-            numberOfLines={1}
-            style={{textAlign: 'center'}}
-            h4Style={theme.colors.black}>
-            Encontre Pets
+          <Text ellipsizeMode="tail" numberOfLines={1} style={styles.textRaca}>
+            {dadosPet.raca}
           </Text>
         </View>
         <View style={styles.cardPetInfoActions}>
-          <Button
-            icon={
-              <MaterialIcons
-                name="favorite-border"
-                color={theme.colors.primary}
-                size={30}
-                onPress={() => {
-                  Alert.alert('Oi', 'Teste');
-                }}
-              />
-            }
-            type={'solid'}
-            buttonStyle={styles.buttonActionCard}
-            containerStyle={styles.buttoncontainerStyle}
-          />
+          {user.uid !== dadosPet.donoPet.uid &&
+            (dadosPet.favorite.filter(item => item === user.uid).length > 0 ? (
+              <>
+                <Button
+                  icon={
+                    <MaterialIcons
+                      name="favorite"
+                      color={theme.colors.primary}
+                      size={30}
+                    />
+                  }
+                  onPress={favoritePet}
+                  type={'solid'}
+                  buttonStyle={styles.buttonActionCard}
+                  containerStyle={styles.buttoncontainerStyle}
+                />
+              </>
+            ) : (
+              <>
+                <Button
+                  icon={
+                    <MaterialIcons
+                      name="favorite-border"
+                      color={theme.colors.primary}
+                      size={30}
+                    />
+                  }
+                  onPress={favoritePet}
+                  type={'solid'}
+                  buttonStyle={styles.buttonActionCard}
+                  containerStyle={styles.buttoncontainerStyle}
+                />
+              </>
+            ))}
           <Button
             icon={
               <MaterialIcons
@@ -59,7 +91,7 @@ const CardPet = ({deletePet, dados, open}) => {
                 color={theme.colors.primary}
                 size={30}
                 onPress={() => {
-                  Alert.alert('Oi', 'Teste');
+                  setOpenModalPetView(true);
                 }}
               />
             }
@@ -69,6 +101,12 @@ const CardPet = ({deletePet, dados, open}) => {
           />
         </View>
       </View>
+
+      <ModalViewPet
+        visible={openModalPetView}
+        setVisible={setOpenModalPetView}
+        dadosPet={dadosPet}
+      />
     </View>
   );
 };
@@ -117,6 +155,7 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 8,
   },
   cardPetInfoDetails: {
     flex: 1,
@@ -131,5 +170,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#e5e5e5',
     alignSelf: 'flex-end',
     padding: 10,
+  },
+  textRaca: {
+    textAlign: 'center',
+    fontSize: 15,
   },
 });
