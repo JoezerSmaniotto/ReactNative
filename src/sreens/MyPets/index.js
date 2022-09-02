@@ -53,8 +53,6 @@ const MyPets = ({navigation}) => {
     longitude: '',
     favorite: [],
   });
-  const [selectSexo, setSelectSexo] = useState(0);
-  const [tipoPet, setTipoPet] = useState(0);
   const [disabledSalveModal, setDisabledSalveModal] = useState(false);
   const {getUser, userE} = useContext(UserContext);
   const {savePet, deletePet, getPets, petsList} = useContext(PetContext);
