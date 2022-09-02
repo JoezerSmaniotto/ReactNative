@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
+import React, {useState, useContext} from 'react';
+import {View, StyleSheet} from 'react-native';
 import {Image, Text, Button, useTheme} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ModalViewPet from './ModalViewPet';

@@ -100,7 +100,7 @@ export const PetProvider = ({children}) => {
         {merge: true},
       )
       .then(() => {
-        showToast('Dados salvos.');
+        showToast('Favoritos atualizados.');
         getPets();
       })
       .catch(e => {
