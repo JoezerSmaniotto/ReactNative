@@ -38,6 +38,7 @@ const MyPets = ({navigation}) => {
   const [openModalSelect, setOpenModalSelect] = useState(false);
   const [openModalMapa, setOpenModaMapa] = useState(false);
   const [imageUri, setImageUri] = useState('');
+  const [petsListUser, setPetsListUser] = useState([]);
   const [petsPesquisa, setPetsPesquisa] = useState([]);
   const {theme} = useTheme();
   const [dadosPet, setDadosPet] = useState({
@@ -67,6 +68,15 @@ const MyPets = ({navigation}) => {
     getApi(); // Obtem o Objeto de acesso a API REST (Do Firebase)
     // eslint-disable-next-line
   }, [petsList]);
+
+  useEffect(() => {
+    if (petsList && userE) {
+      let petsFilteredUserLogged = petsList.filter(
+        item => item.donoPet.uid === userE.uid,
+      );
+      setPetsListUser(petsFilteredUserLogged);
+    }
+  }, [petsList, userE]);
 
   const fetchData = async () => {
     await getUser();
@@ -266,7 +276,7 @@ const MyPets = ({navigation}) => {
   }
 
   const pesquisaPetPorNome = nome => {
-    const filterNames = petsList.filter(pet => {
+    const filterNames = petsListUser.filter(pet => {
       return pet.nome.toLocaleLowerCase().includes(nome.toLocaleLowerCase());
     });
     setPetsPesquisa(filterNames);
@@ -303,7 +313,7 @@ const MyPets = ({navigation}) => {
         <>
           <View style={{flex: 1}}>
             {petsPesquisa.length === 0 &&
-              petsList.map(item => {
+              petsListUser.map(item => {
                 return (
                   <CardPet
                     deletePet={() => {
