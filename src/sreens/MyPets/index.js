@@ -50,6 +50,7 @@ const MyPets = ({navigation}) => {
     imagemPetParceial: '',
     latitude: '',
     longitude: '',
+    favorite: [],
   });
   const [selectSexo, setSelectSexo] = useState(0);
   const [tipoPet, setTipoPet] = useState(0);
@@ -72,7 +73,14 @@ const MyPets = ({navigation}) => {
   };
 
   useEffect(() => {
-    getPets();
+    let isMounted = true;
+    if (isMounted) {
+      getPets();
+    }
+    return () => {
+      // when component unmounts, set isMounted to false
+      isMounted = false;
+    };
     // eslint-disable-next-line
   }, []);
 
@@ -128,6 +136,7 @@ const MyPets = ({navigation}) => {
       imagemPetParceial: '',
       latitude: '',
       longitude: '',
+      favorite: [],
     });
     setDisabledSalveModal(false);
     setImageUri('');
@@ -158,6 +167,7 @@ const MyPets = ({navigation}) => {
       imagemPet: dados.imagemPet,
       latitude: dados.latitude,
       longitude: dados.longitude,
+      favorite: dados.uid ? dados.favorite : [],
     });
     setImageUri(dados.imagemPet);
     setVisible(true);
