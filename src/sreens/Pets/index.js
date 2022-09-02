@@ -73,7 +73,6 @@ const Pets = ({navigation}) => {
       setIsFiltered(true);
     }
 
-    console.log('dataFiltroAplicado: ', data);
     setdataPetsFiltered(data);
     //"raca": "Labrador retriver", "sexo": 0, "tipo": 0,
   }, [parametrosFiltrosPets, petsList]);
@@ -108,11 +107,15 @@ const Pets = ({navigation}) => {
         <View style={styles.divInferior}>
           {!isFiltered ? (
             petsList.map(item => {
-              return <CardPetList key={item.uid} dados={item} user={userE} />;
+              return (
+                <CardPetList key={item.uid} dadosPet={item} user={userE} />
+              );
             })
           ) : dataPetsFiltered.length > 0 ? (
             dataPetsFiltered.map(item => {
-              return <CardPetList key={item.uid} dados={item} user={userE} />;
+              return (
+                <CardPetList key={item.uid} dadosPet={item} user={userE} />
+              );
             })
           ) : (
             <View style={styles.emptyContent}>

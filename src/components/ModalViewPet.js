@@ -6,7 +6,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
-const ModalViewPet = ({visible, setVisible, dados}) => {
+const ModalViewPet = ({visible, setVisible, dadosPet}) => {
   const {theme} = useTheme();
 
   const toggleOverlay = () => {
@@ -39,7 +39,7 @@ const ModalViewPet = ({visible, setVisible, dados}) => {
               // resizeMode="center" // Contain
               style={styles.image}
               source={{
-                uri: dados.imagemPet,
+                uri: dadosPet.imagemPet,
               }}
               accessibilityLabel="logo do app"
             />
@@ -51,7 +51,7 @@ const ModalViewPet = ({visible, setVisible, dados}) => {
               numberOfLines={1}
               style={{textAlign: 'center'}}
               h4Style={theme.colors.black}>
-              {dados.nome}
+              {dadosPet.nome}
             </Text>
             <View style={styles.InfoAdicionais}>
               <MaterialIcons
@@ -63,7 +63,7 @@ const ModalViewPet = ({visible, setVisible, dados}) => {
                 ellipsizeMode="tail"
                 numberOfLines={1}
                 style={styles.textoEstilo}>
-                {dados.raca}
+                {dadosPet.raca}
               </Text>
             </View>
             <View style={styles.InfoAdicionais}>
@@ -76,7 +76,7 @@ const ModalViewPet = ({visible, setVisible, dados}) => {
                 ellipsizeMode="tail"
                 numberOfLines={2}
                 style={styles.textoEstiloSexoPet}>
-                {dados.sexo === 0 ? 'Macho' : 'Fêmea'}
+                {dadosPet.sexo === 0 ? 'Macho' : 'Fêmea'}
               </Text>
             </View>
             <View style={styles.InfoAdicionais}>
@@ -89,7 +89,7 @@ const ModalViewPet = ({visible, setVisible, dados}) => {
                 ellipsizeMode="tail"
                 numberOfLines={1}
                 style={styles.textoEstilo}>
-                {dados.infAdi}
+                {dadosPet.infAdi}
               </Text>
             </View>
           </View>
