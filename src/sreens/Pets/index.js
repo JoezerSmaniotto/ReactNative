@@ -1,7 +1,16 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {SafeAreaView, ScrollView, View, StyleSheet, Alert} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  StyleSheet,
+  ToastAndroid,
+  Alert,
+} from 'react-native';
 import {Input, Text, Button, useTheme} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+
 import CardPetList from '../../components/CardPetList';
 import ModalFilterPet from '../../components/ModalFilterPet';
 import Loading from '../../components/Loading';
@@ -19,40 +28,31 @@ const Pets = ({navigation}) => {
     tipo: 1,
     sexo: 2,
   });
-  const {getPetsView, petsListView} = useContext(PetContext);
+  const {getPets, petsList} = useContext(PetContext);
   const {getUser, userE} = useContext(UserContext);
 
   useEffect(() => {
     //  set isMounted to true
     let isMounted = true;
-    // 👇️ only update state if component is mounted
+    // only update state if component is mounted
     if (isMounted) {
-      getPetsView({
-        raca: '',
-        tipo: 0,
-        sexo: 2,
-      });
+      getPets();
+      getUser();
     }
     return () => {
-      //  when component unmounts, set isMounted to false
+      // when component unmounts, set isMounted to false
       isMounted = false;
-      // setdataPetsFiltered(false);
-      // setParametrosFiltrosPets({raca: '', tipo: 1, sexo: 2});
     };
     // eslint-disable-next-line
   }, []);
-  useEffect(() => {
-    getUser();
-    // eslint-disable-next-line
-  }, []);
 
   useEffect(() => {
-    setdataPetsFiltered(petsListView);
-  }, [petsListView]);
+    setdataPetsFiltered(petsList);
+  }, [petsList]);
 
   useEffect(() => {
     // Tipo
-    let data = petsListView.filter(pet => {
+    let data = petsList.filter(pet => {
       return pet.tipo === parametrosFiltrosPets.tipo;
     });
 
@@ -76,7 +76,11 @@ const Pets = ({navigation}) => {
     console.log('dataFiltroAplicado: ', data);
     setdataPetsFiltered(data);
     //"raca": "Labrador retriver", "sexo": 0, "tipo": 0,
-  }, [parametrosFiltrosPets, petsListView]);
+  }, [parametrosFiltrosPets, petsList]);
+
+  const showToast = message => {
+    ToastAndroid.show(message, ToastAndroid.SHORT);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -90,11 +94,11 @@ const Pets = ({navigation}) => {
               name="search"
               color={theme.colors.primary}
               size={35}
-              onPress={() => {
-                setOpenModalFilterPet(!openModalFilterPet);
-              }}
             />
           }
+          onPress={() => {
+            setOpenModalFilterPet(!openModalFilterPet);
+          }}
           type={'solid'}
           buttonStyle={styles.buttonStyle}
           containerStyle={styles.buttoncontainerStyle}
@@ -103,7 +107,7 @@ const Pets = ({navigation}) => {
       <ScrollView style={{flex: 1}}>
         <View style={styles.divInferior}>
           {!isFiltered ? (
-            petsListView.map(item => {
+            petsList.map(item => {
               return <CardPetList key={item.uid} dados={item} user={userE} />;
             })
           ) : dataPetsFiltered.length > 0 ? (
@@ -116,9 +120,6 @@ const Pets = ({navigation}) => {
                 name="pets"
                 color={theme.colors.primary}
                 size={60}
-                onPress={() => {
-                  setOpenModalFilterPet(!openModalFilterPet);
-                }}
               />
               <Text
                 style={{
@@ -128,6 +129,22 @@ const Pets = ({navigation}) => {
                 }}>
                 Não existe Pets para os filtros aplicados!
               </Text>
+              <Button
+                icon={
+                  <FontAwesome
+                    name="trash"
+                    color={theme.colors.black}
+                    size={27}
+                  />
+                }
+                onPress={() => {
+                  setIsFiltered(false);
+                  showToast('Filtro removido');
+                }}
+                type={'solid'}
+                buttonStyle={styles.buttonFilterStyle}
+                containerStyle={styles.containerStyle}
+              />
             </View>
           )}
         </View>
@@ -138,6 +155,8 @@ const Pets = ({navigation}) => {
         visible={openModalFilterPet}
         setVisible={setOpenModalFilterPet}
         setParametrosFiltrosPets={setParametrosFiltrosPets}
+        isFiltered={isFiltered}
+        setIsFiltered={setIsFiltered}
       />
     </SafeAreaView>
   );
