@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect} from 'react';
 import {
   Button,
@@ -9,7 +10,7 @@ import {
 import {View, StyleSheet, ToastAndroid} from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ModalSelectFilter from '../components/ModalSelectFilter';
@@ -39,7 +40,6 @@ const ModalFilterPet = ({
         raca: '',
       });
     };
-    // eslint-disable-next-line
   }, []);
 
   const toggleOverlay = () => {
@@ -69,7 +69,6 @@ const ModalFilterPet = ({
       raca: '',
     });
     setIsFiltered(false);
-    toggleOverlay();
     showToast('Filtro removido');
   };
 
@@ -140,8 +139,8 @@ const ModalFilterPet = ({
           <View style={styles.viewButonsActions}>
             <Button
               icon={
-                <FontAwesome
-                  name="trash"
+                <MaterialCommunityIcons
+                  name="filter-remove-outline"
                   color={theme.colors.black}
                   size={27}
                 />
