@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState, useCallback} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Text} from 'react-native-elements';
 import {COLORS} from '../../assets/colors';
-import {SafeAreaView, StyleSheet, ScrollView, View} from 'react-native';
+import {SafeAreaView, StyleSheet, ScrollView, View, Alert} from 'react-native';
 import {UserContext} from '../../context/UserProvider';
 import {AuthUserContext} from '../../context/AuthUserProvider';
-import auth from '@react-native-firebase/auth';
+import Loading from '../../components/Loading';
 import MeuButton from '../../components/MeuButton';
 
 import {Input} from 'react-native-elements';
@@ -18,17 +18,41 @@ const User = ({route, navigation}) => {
 
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
-  const [pass, setPass] = useState('');
+  const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
   const fetchData = async () => {
     await getUser();
   };
 
+  const handlerSelfDestruct = () => {
+    Alert.alert('ATENÇÃO', 'Tem certeza que deseja excluir a sua conta?', [
+      {
+        text: 'SIM',
+        onPress: () => excluir(),
+      },
+      {
+        text: 'NÃO',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+    ]);
+  };
+  const handlerEdit = () => {
+    Alert.alert('ATENÇÃO', 'Tem certeza que deseja editar a sua conta?', [
+      {
+        text: 'SIM',
+        onPress: () => editar(),
+      },
+      {
+        text: 'NÃO',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+    ]);
+  };
   useEffect(() => {
     if (userE) {
-      // console.log('############# E F E C T ##################');
-      // console.log('-----------User--------: ', userE);
       setNome(userE.nome);
       setEmail(userE.email);
     }
@@ -50,28 +74,13 @@ const User = ({route, navigation}) => {
         await updateUser(userUpdate);
       }
     }
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   setDisabled(true);
+    // }, 400);
   };
 
-  // const editar = useCallback(async () => {
-  //   // console.log('-- -- -- EDITAR -- -- --');
-  //   // console.log('NOME => ', nome);
-  //   // console.log('email => ', email);
-  //   // console.log('----------');
-  //   setDisabled(!disabled);
-  //   if (userE.nome !== nome) {
-  //     let userUpdate = {
-  //       uid: userE.uid,
-  //       nome: nome,
-  //       email: userE.email,
-  //     };
-  //     if (!disabled) {
-  //       await updateUser(userUpdate);
-  //     }
-  //   }
-  // }, [disabled, nome, email]);
-
   const excluir = async () => {
-    console.log('-- -- -- Exlcuir Conta -- -- --');
     await deleteUser(userE.uid);
     AsyncStorage.removeItem('user'); // deleta na cache
     navigation.dispatch(
@@ -88,57 +97,33 @@ const User = ({route, navigation}) => {
         <View style={styles.superior}>
           <Text h2>Edição Usuário</Text>
           <Input
-            // label="Nome Completo"
             placeholder="Nome Completo"
             onChangeText={t => setNome(t)}
             keyboardType="default"
             leftIcon={{type: 'font-awesome', name: 'user'}}
             value={nome}
             disabled={disabled}
-
-            // style={styles.input}
-            // returnKeyType="next"
-            // onEndEditing={() => this.emailTextInput.focus()}
           />
-
           <Input
-            // ref={ref => {
-            //   this.emailTextInput = ref;
-            // }}
-            // label="Email"
             placeholder="Email"
             onChangeText={t => setEmail(t)}
             keyboardType="email-address"
             leftIcon={{type: 'font-awesome', name: 'envelope'}}
             value={email}
-            // disabled={true}
-            // style={styles.input}
-            // returnKeyType="next"
-            // onEndEditing={() => this.passTextInput.focus()}
+            disabled={true}
           />
-          {/* <Input
-            // ref={ref => {
-            //   this.passTextInput = ref; // recebe a referencia
-            // }}
-            // label="Senha"
-            placeholder="Senha"
-            onChangeText={t => setPass(t)}
-            keyboardType="default"
-            leftIcon={{type: 'font-awesome', name: 'lock'}}
-            value={pass}
-            // style={styles.input}
-            // returnKeyType="next"
-            // onEndEditing={() => this.confirPassTextInput.focus()}
-          /> */}
 
-          <MeuButton texto={disabled ? 'Editar' : 'Salvar'} onClick={editar} />
+          <MeuButton
+            texto={disabled ? 'Editar' : 'Salvar'}
+            onClick={() => (disabled ? handlerEdit() : setDisabled(!disabled))}
+          />
 
-          <MeuButton texto="Excluir Conta" onClick={excluir} />
+          <MeuButton texto="Excluir Conta" onClick={handlerSelfDestruct} />
 
           <MeuButton texto="SAIR" onClick={() => signOut()} />
         </View>
       </ScrollView>
-      {/* {loading && <Loading />} */}
+      {loading && <Loading />}
     </SafeAreaView>
   );
 };
