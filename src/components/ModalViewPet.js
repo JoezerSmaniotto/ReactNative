@@ -1,8 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Button, Overlay, Text, useTheme, Image} from 'react-native-elements';
-import {View, StyleSheet} from 'react-native';
+import {Button, Text, useTheme, Image} from 'react-native-elements';
+import {View, StyleSheet, Modal, Dimensions} from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import Feather from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
@@ -14,29 +14,22 @@ const ModalViewPet = ({visible, setVisible, dadosPet}) => {
   };
 
   return (
-    <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+    <Modal visible={visible} onBackdropPress={toggleOverlay}>
+      <MaterialIcons
+        style={{alignSelf: 'flex-end', marginTop: 18, marginRight: 18}}
+        name="close"
+        color={theme.colors.primary}
+        size={50}
+        onPress={() => {
+          setVisible(false);
+        }}
+      />
       <View style={styles.container}>
-        <View style={styles.viewSupior}>
-          <Button
-            icon={
-              <Fontisto
-                name="close"
-                color={{color: theme.colors.black}}
-                size={23}
-                onPress={() => {
-                  toggleOverlay();
-                }}
-              />
-            }
-            type={'solid'}
-            buttonStyle={styles.buttonStyle}
-            containerStyle={styles.containerStyle}
-          />
-        </View>
+        <View style={styles.viewSupior} />
         <View style={styles.viewConteudo}>
           <View style={styles.viewImage}>
             <Image
-              // resizeMode="center" // Contain
+              //resizeMode="center" // Contain
               style={styles.image}
               source={{
                 uri: dadosPet.imagemPet,
@@ -51,13 +44,13 @@ const ModalViewPet = ({visible, setVisible, dadosPet}) => {
               numberOfLines={1}
               style={{textAlign: 'center'}}
               h4Style={theme.colors.black}>
-              {dadosPet.nome}
+              Nome: {dadosPet.nome}
             </Text>
             <View style={styles.InfoAdicionais}>
               <MaterialIcons
                 name="pets"
                 color={theme.colors.primary}
-                size={15}
+                size={25}
               />
               <Text
                 ellipsizeMode="tail"
@@ -70,7 +63,7 @@ const ModalViewPet = ({visible, setVisible, dadosPet}) => {
               <FontAwesome5
                 name="venus-mars"
                 color={theme.colors.primary}
-                size={15}
+                size={25}
               />
               <Text
                 ellipsizeMode="tail"
@@ -83,7 +76,7 @@ const ModalViewPet = ({visible, setVisible, dadosPet}) => {
               <FontAwesome5
                 name="info-circle"
                 color={theme.colors.primary}
-                size={15}
+                size={25}
               />
               <Text
                 ellipsizeMode="tail"
@@ -95,30 +88,22 @@ const ModalViewPet = ({visible, setVisible, dadosPet}) => {
           </View>
         </View>
       </View>
-    </Overlay>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: 340,
-    height: 210,
-    display: 'flex',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   viewSupior: {
-    width: '100%',
-    sdisplay: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    flexDirection: 'row',
   },
   viewConteudo: {
     marginTop: 10,
-    width: '100%',
-    height: 130,
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
   },
 
   viewImage: {
@@ -131,9 +116,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   image: {
-    width: 160,
-    height: 120,
-    borderRadius: 8,
+    width: Dimensions.get('window').width - 50,
+    height: Dimensions.get('window').width - 50,
+    borderRadius: 18,
   },
 
   buttonStyle: {
@@ -152,14 +137,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    marginTop: 15,
   },
   textoEstilo: {
-    fontSize: 15,
-    marginLeft: 5,
+    fontSize: 18,
+    marginLeft: 8,
   },
   textoEstiloSexoPet: {
-    fontSize: 15,
-    marginLeft: 4,
+    fontSize: 18,
+    marginLeft: 8,
   },
 });
 
