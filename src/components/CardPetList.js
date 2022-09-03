@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useContext} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableHighlight} from 'react-native';
 import {Image, Text, Button, useTheme} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ModalViewPet from './ModalViewPet';
@@ -24,90 +25,84 @@ const CardPet = ({dadosPet, user}) => {
   };
 
   return (
-    <View style={styles.cardPet}>
-      <View style={styles.cardPetImg}>
-        <Image
-          // resizeMode="center" // Contain
-          style={styles.image}
-          source={{
-            uri: dadosPet.imagemPet,
-          }}
-          accessibilityLabel="logo do app"
-        />
-      </View>
-      <View style={styles.cardPetInfo}>
-        <View style={styles.cardPetInfoDetails}>
-          <Text
-            h4
-            ellipsizeMode="tail"
-            numberOfLines={1}
-            style={{textAlign: 'center'}}
-            h4Style={theme.colors.black}>
-            {dadosPet.nome}
-          </Text>
-          <Text ellipsizeMode="tail" numberOfLines={1} style={styles.textRaca}>
-            {dadosPet.raca}
-          </Text>
-        </View>
-        <View style={styles.cardPetInfoActions}>
-          {user.uid !== dadosPet.donoPet.uid &&
-            (dadosPet.favorite.filter(item => item === user.uid).length > 0 ? (
-              <>
-                <Button
-                  icon={
-                    <MaterialIcons
-                      name="favorite"
-                      color={theme.colors.primary}
-                      size={30}
-                    />
-                  }
-                  onPress={favoritePet}
-                  type={'solid'}
-                  buttonStyle={styles.buttonActionCard}
-                  containerStyle={styles.buttoncontainerStyle}
-                />
-              </>
-            ) : (
-              <>
-                <Button
-                  icon={
-                    <MaterialIcons
-                      name="favorite-border"
-                      color={theme.colors.primary}
-                      size={30}
-                    />
-                  }
-                  onPress={favoritePet}
-                  type={'solid'}
-                  buttonStyle={styles.buttonActionCard}
-                  containerStyle={styles.buttoncontainerStyle}
-                />
-              </>
-            ))}
-          <Button
-            icon={
-              <MaterialIcons
-                name="search"
-                color={theme.colors.primary}
-                size={30}
-                onPress={() => {
-                  setOpenModalPetView(true);
-                }}
-              />
-            }
-            type={'solid'}
-            buttonStyle={styles.buttonActionCard}
-            containerStyle={styles.buttoncontainerStyle}
+    <TouchableHighlight
+      style={styles.cardPet}
+      onPress={() => setOpenModalPetView(true)}
+      underlayColor="#e5e5e5">
+      <>
+        <View style={styles.cardPetImg}>
+          <Image
+            // resizeMode="center" // Contain
+            style={styles.image}
+            source={{
+              uri: dadosPet.imagemPet,
+            }}
+            accessibilityLabel="logo do pet"
           />
         </View>
-      </View>
+        <View style={styles.cardPetInfo}>
+          <View style={styles.cardPetInfoDetails}>
+            <Text
+              h4
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={{textAlign: 'center'}}
+              h4Style={theme.colors.black}>
+              {dadosPet.nome}
+            </Text>
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={styles.textRaca}>
+              {dadosPet.raca}
+            </Text>
+          </View>
+          <View style={styles.cardPetInfoActions}>
+            {user.uid !== dadosPet.donoPet.uid &&
+              (dadosPet.favorite.filter(item => item === user.uid).length >
+              0 ? (
+                <>
+                  <Button
+                    icon={
+                      <MaterialIcons
+                        name="favorite"
+                        color={theme.colors.primary}
+                        size={30}
+                      />
+                    }
+                    onPress={favoritePet}
+                    type={'solid'}
+                    buttonStyle={styles.buttonActionCard}
+                    containerStyle={styles.buttoncontainerStyle}
+                  />
+                </>
+              ) : (
+                <>
+                  <Button
+                    icon={
+                      <MaterialIcons
+                        name="favorite-border"
+                        color={theme.colors.primary}
+                        size={30}
+                      />
+                    }
+                    onPress={favoritePet}
+                    type={'solid'}
+                    buttonStyle={styles.buttonActionCard}
+                    containerStyle={styles.buttoncontainerStyle}
+                  />
+                </>
+              ))}
+          </View>
+        </View>
 
-      <ModalViewPet
-        visible={openModalPetView}
-        setVisible={setOpenModalPetView}
-        dadosPet={dadosPet}
-      />
-    </View>
+        <ModalViewPet
+          visible={openModalPetView}
+          setVisible={setOpenModalPetView}
+          dadosPet={dadosPet}
+        />
+      </>
+    </TouchableHighlight>
   );
 };
 
