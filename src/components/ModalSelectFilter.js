@@ -16,7 +16,14 @@ const ModalSelectFilter = ({visible, setVisible, tipoPet, setaRaca, raca}) => {
   const {theme} = useTheme();
 
   useEffect(() => {
-    getRacaPets();
+    let isMounted = true;
+    if (isMounted) {
+      getRacaPets();
+    }
+    return () => {
+      // when component unmounts, set isMounted to false
+      isMounted = false;
+    };
     // eslint-disable-next-line
   }, []);
 
