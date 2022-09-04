@@ -28,6 +28,7 @@ const ModalFilterPet = ({
     tipo: 0,
     sexo: 0,
     raca: '',
+    favoritos: false,
   });
   const [openSelectFilter, setOpenSelectFilter] = useState(false);
 
@@ -38,6 +39,7 @@ const ModalFilterPet = ({
         tipo: 0,
         sexo: 0,
         raca: '',
+        favoritos: false,
       });
     };
   }, []);
@@ -67,6 +69,7 @@ const ModalFilterPet = ({
       tipo: 0,
       sexo: 0,
       raca: '',
+      favoritos: false,
     });
     setIsFiltered(false);
     showToast('Filtro removido');
@@ -86,6 +89,7 @@ const ModalFilterPet = ({
             Filtrar Pets
           </Text>
           <Button
+            label={'Favoritos'}
             icon={
               <Fontisto
                 name="close"
@@ -96,6 +100,7 @@ const ModalFilterPet = ({
                 }}
               />
             }
+            iconRight
             type={'solid'}
             buttonStyle={styles.buttonStyle}
           />
@@ -112,7 +117,6 @@ const ModalFilterPet = ({
             }}
             containerStyle={styles.buttonGroupContainer}
           />
-
           <ButtonGroup
             buttons={['Macho', 'Fêmea', 'Ambos']}
             selectedIndex={dadosFilter.sexo}
@@ -136,6 +140,27 @@ const ModalFilterPet = ({
             }}>
             {dadosFilter.raca}
           </Texto>
+
+          <Button
+            type={dadosFilter.favoritos ? 'solid' : 'outline'}
+            buttonStyle={{width: 150}}
+            containerStyle={styles.buttonFavorite}
+            disabledStyle={{
+              borderWidth: 2,
+            }}
+            icon={
+              <MaterialIcons
+                name="favorite"
+                color={theme.colors.black}
+                size={17}
+              />
+            }
+            iconContainerStyle={{background: '#000'}}
+            iconRight
+            onPress={() => onchangeDados({favoritos: !dadosFilter.favoritos})}
+            title="Favoritos"
+            titleStyle={{marginHorizontal: 5}}
+          />
           <View style={styles.viewButonsActions}>
             <Button
               icon={
@@ -148,7 +173,7 @@ const ModalFilterPet = ({
               onPress={removeFilter}
               type={'solid'}
               buttonStyle={styles.buttonFilterStyle}
-              containerStyle={styles.bottomButtonMargin}
+              containerStyle={styles.bottonButtonMargin}
             />
             <Button
               icon={
@@ -179,7 +204,7 @@ const ModalFilterPet = ({
 const styles = StyleSheet.create({
   container: {
     width: 340,
-    height: 279,
+    height: 350,
     display: 'flex',
   },
   viewSupior: {
@@ -192,7 +217,7 @@ const styles = StyleSheet.create({
   viewConteudo: {
     marginTop: 10,
     width: '100%',
-    height: 210,
+    height: 240,
     display: 'flex',
   },
 
@@ -218,12 +243,18 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   viewButonsActions: {
+    marginTop: 10,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-  bottomButtonMargin: {
+  bottonButtonMargin: {
     marginRight: 5,
+  },
+  buttonFavorite: {
+    alignItems: 'flex-end',
+    borderSolid: 2,
+    marginRight: 2,
   },
 });
 

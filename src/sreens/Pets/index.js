@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {Text, Button, useTheme} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import CardPetList from '../../components/CardPetList';
 import ModalFilterPet from '../../components/ModalFilterPet';
@@ -29,6 +29,7 @@ const Pets = ({navigation}) => {
     raca: '',
     tipo: 1,
     sexo: 2,
+    favoritos: false,
   });
   const {getPets, petsList} = useContext(PetContext);
   const {getUser, userE} = useContext(UserContext);
@@ -54,32 +55,70 @@ const Pets = ({navigation}) => {
     setdataPetsFiltered(petsList);
   }, [petsList]);
 
+  // useEffect(() => {
+  //   let petFavoritados = [];
+  //   petsList.forEach(pet => {
+  //     if (pet.favorite.filter(item => item === userE.uid).length > 0) {
+  //       petFavoritados.push(pet);
+  //     }
+  //   });
+  //   console.log('petFavoritados:', petFavoritados);
+  // }, [petsList]);
+
   useEffect(() => {
-    // Tipo
-    let data = petsList.filter(pet => {
-      return pet.tipo === parametrosFiltrosPets.tipo;
-    });
+    // let data = petsList;
+    if ((parametrosFiltrosPets, petsList, userE.uid !== '')) {
+      let data = '';
+      if (parametrosFiltrosPets.favoritos) {
+        let petFavoritados = [];
+        petsList.forEach(pet => {
+          // if (pet.favorite.filter(item => item === userE.uid).length > 0) {
+          pet.favorite.forEach(item => {
+            if (item === userE.uid) {
+              petFavoritados.push(pet);
+            }
+          });
+        });
+        data = petFavoritados;
+        // Tipo
+        data = data.filter(pet => {
+          return pet.tipo === parametrosFiltrosPets.tipo;
+        });
 
-    // Sexo
-    if (parametrosFiltrosPets.sexo !== 2) {
-      data = data.filter(pet => {
-        return pet.sexo === parametrosFiltrosPets.sexo;
-      });
-    }
+        // Sexo
+        if (parametrosFiltrosPets.sexo !== 2) {
+          data = data.filter(pet => {
+            return pet.sexo === parametrosFiltrosPets.sexo;
+          });
+        }
+      } else {
+        // Tipo
+        data = petsList.filter(pet => {
+          return pet.tipo === parametrosFiltrosPets.tipo;
+        });
 
-    // Raca
-    if (parametrosFiltrosPets.raca !== '') {
-      data = data.filter(pet => {
-        return pet.raca === parametrosFiltrosPets.raca;
-      });
-    }
-    if (parametrosFiltrosPets.isFiltered) {
-      setIsFiltered(true);
-    }
+        // Sexo
+        if (parametrosFiltrosPets.sexo !== 2) {
+          data = data.filter(pet => {
+            return pet.sexo === parametrosFiltrosPets.sexo;
+          });
+        }
 
-    setdataPetsFiltered(data);
+        // Raca
+        if (parametrosFiltrosPets.raca !== '') {
+          data = data.filter(pet => {
+            return pet.raca === parametrosFiltrosPets.raca;
+          });
+        }
+      }
+      if (parametrosFiltrosPets.isFiltered) {
+        setIsFiltered(true);
+      }
+
+      setdataPetsFiltered(data);
+    }
     //"raca": "Labrador retriver", "sexo": 0, "tipo": 0,
-  }, [parametrosFiltrosPets, petsList]);
+  }, [parametrosFiltrosPets, petsList, userE]);
 
   const showToast = message => {
     ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -143,14 +182,20 @@ const Pets = ({navigation}) => {
                   </Text>
                   <Button
                     icon={
-                      <FontAwesome
-                        name="trash"
+                      <MaterialCommunityIcons
+                        name="filter-remove-outline"
                         color={theme.colors.black}
                         size={27}
                       />
                     }
                     onPress={() => {
                       setIsFiltered(false);
+                      setParametrosFiltrosPets({
+                        raca: '',
+                        tipo: 1,
+                        sexo: 2,
+                        favoritos: false,
+                      });
                       showToast('Filtro removido');
                     }}
                     type={'solid'}
