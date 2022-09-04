@@ -5,6 +5,7 @@ import {View, StyleSheet, Modal, Dimensions} from 'react-native';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const ModalViewPet = ({visible, setVisible, dadosPet}) => {
   const {theme} = useTheme();
@@ -60,8 +61,8 @@ const ModalViewPet = ({visible, setVisible, dadosPet}) => {
               </Text>
             </View>
             <View style={styles.InfoAdicionais}>
-              <FontAwesome5
-                name="venus-mars"
+              <FontAwesome
+                name={dadosPet.sexo === 0 ? 'mars' : 'venus'}
                 color={theme.colors.primary}
                 size={25}
               />
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
   },
   textoEstiloSexoPet: {
     fontSize: 18,
-    marginLeft: 8,
+    marginLeft: 14,
   },
 });
 

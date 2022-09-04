@@ -3,6 +3,7 @@ import React, {useState, useContext} from 'react';
 import {View, StyleSheet, TouchableHighlight} from 'react-native';
 import {Image, Text, Button, useTheme} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ModalViewPet from './ModalViewPet';
 import {PetContext} from '../context/PetProvider';
 
@@ -56,6 +57,12 @@ const CardPet = ({dadosPet, user}) => {
               style={styles.textRaca}>
               {dadosPet.raca}
             </Text>
+            <FontAwesome
+              name={dadosPet.sexo === 0 ? 'mars' : 'venus'}
+              color={theme.colors.primary}
+              size={18}
+              style={{alignSelf: 'center'}}
+            />
           </View>
           <View style={styles.cardPetInfoActions}>
             {user.uid !== dadosPet.donoPet.uid &&
