@@ -6,6 +6,8 @@ import MyPets from '../MyPets';
 import Pets from '../Pets';
 import User from '../User';
 import PetsMap from '../PetsMap';
+import Notifications from '../Notifications';
+
 import {PetContext} from '../../context/PetProvider';
 
 const Tab = createBottomTabNavigator();
@@ -36,6 +38,8 @@ const Home = ({navigation}) => {
             iconName = 'people';
           } else if (route.name === 'PetsMap') {
             iconName = 'map';
+          } else if (route.name === 'Notifications') {
+            iconName = 'notifications-none';
           }
           return (
             <MaterialIcons
@@ -54,13 +58,6 @@ const Home = ({navigation}) => {
         }}
       />
       <Tab.Screen
-        name="MyPets"
-        component={MyPets}
-        options={{
-          tabBarLabel: 'MyPets',
-        }}
-      />
-      <Tab.Screen
         name="PetsMap"
         component={PetsMap}
         options={{
@@ -68,6 +65,21 @@ const Home = ({navigation}) => {
           tabBarBadge: petsList.length, // exemplo de badge só tens que colocar em state
         }}
       />
+      <Tab.Screen
+        name="MyPets"
+        component={MyPets}
+        options={{
+          tabBarLabel: 'MyPets',
+        }}
+      />
+      <Tab.Screen
+        name="Notifications"
+        component={Notifications}
+        options={{
+          tabBarLabel: 'Notificações',
+        }}
+      />
+
       <Tab.Screen
         name="User"
         component={User}
