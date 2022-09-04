@@ -55,16 +55,6 @@ const Pets = ({navigation}) => {
     setdataPetsFiltered(petsList);
   }, [petsList]);
 
-  // useEffect(() => {
-  //   let petFavoritados = [];
-  //   petsList.forEach(pet => {
-  //     if (pet.favorite.filter(item => item === userE.uid).length > 0) {
-  //       petFavoritados.push(pet);
-  //     }
-  //   });
-  //   console.log('petFavoritados:', petFavoritados);
-  // }, [petsList]);
-
   useEffect(() => {
     // let data = petsList;
     if ((parametrosFiltrosPets, petsList, userE.uid !== '')) {
