@@ -7,7 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-const ModalViewPet = ({visible, setVisible, dadosPet}) => {
+const ModalViewPet = ({visible, setVisible, dadosPet, user}) => {
   const {theme} = useTheme();
 
   const toggleOverlay = () => {
@@ -81,10 +81,31 @@ const ModalViewPet = ({visible, setVisible, dadosPet}) => {
               />
               <Text
                 ellipsizeMode="tail"
-                numberOfLines={1}
+                numberOfLines={3}
                 style={styles.textoEstilo}>
                 {dadosPet.infAdi}
               </Text>
+            </View>
+            <View style={styles.InfoAdicionais}>
+              {dadosPet.favorite.filter(
+                item => item.userIdSol === user.uid && item.status === 'a',
+              ).length > 0 ? (
+                <>
+                  <FontAwesome
+                    name={'whatsapp'}
+                    color={theme.colors.primary}
+                    size={25}
+                  />
+                  <Text
+                    ellipsizeMode="tail"
+                    numberOfLines={1}
+                    style={styles.textoEstiloSexoPet}>
+                    {dadosPet.donoPet.tel}
+                  </Text>
+                </>
+              ) : (
+                <></>
+              )}
             </View>
           </View>
         </View>
@@ -109,17 +130,19 @@ const styles = StyleSheet.create({
 
   viewImage: {
     flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  image: {
+    width: Dimensions.get('window').width - 50,
+    height: Dimensions.get('window').width - 50,
+    borderRadius: 18,
   },
   Info: {
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     marginLeft: 10,
-  },
-  image: {
-    width: Dimensions.get('window').width - 50,
-    height: Dimensions.get('window').width - 50,
-    borderRadius: 18,
   },
 
   buttonStyle: {
@@ -143,10 +166,12 @@ const styles = StyleSheet.create({
   textoEstilo: {
     fontSize: 18,
     marginLeft: 8,
+    width: '80%',
   },
   textoEstiloSexoPet: {
     fontSize: 18,
     marginLeft: 14,
+    width: '80%',
   },
 });
 
