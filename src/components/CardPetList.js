@@ -13,14 +13,16 @@ const CardPet = ({dadosPet, user}) => {
   const [openModalPetView, setOpenModalPetView] = useState(false);
 
   const favoritePet = () => {
-    if (dadosPet.favorite.filter(item => item === user.uid).length > 0) {
+    if (
+      dadosPet.favorite.filter(item => item.userIdSol === user.uid).length > 0
+    ) {
       let removeUserFavorite = dadosPet.favorite.filter(
-        item => item !== user.uid,
+        item => item.userIdSol !== user.uid,
       );
       favoritePetContext(dadosPet.uid, removeUserFavorite);
     } else {
       let addUserFavorite = dadosPet.favorite;
-      addUserFavorite.push(user.uid);
+      addUserFavorite.push({userIdSol: user.uid, status: 's'});
       favoritePetContext(dadosPet.uid, addUserFavorite);
     }
   };
@@ -66,8 +68,8 @@ const CardPet = ({dadosPet, user}) => {
           </View>
           <View style={styles.cardPetInfoActions}>
             {user.uid !== dadosPet.donoPet.uid &&
-              (dadosPet.favorite.filter(item => item === user.uid).length >
-              0 ? (
+              (dadosPet.favorite.filter(item => item.userIdSol === user.uid)
+                .length > 0 ? (
                 <>
                   <Button
                     icon={
@@ -107,6 +109,7 @@ const CardPet = ({dadosPet, user}) => {
           visible={openModalPetView}
           setVisible={setOpenModalPetView}
           dadosPet={dadosPet}
+          user={user}
         />
       </>
     </TouchableHighlight>
