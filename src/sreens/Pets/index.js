@@ -57,14 +57,14 @@ const Pets = ({navigation}) => {
 
   useEffect(() => {
     // let data = petsList;
-    if ((parametrosFiltrosPets, petsList, userE.uid !== '')) {
+    if (parametrosFiltrosPets && petsList && userE.uid !== '') {
       let data = '';
       if (parametrosFiltrosPets.favoritos) {
         let petFavoritados = [];
         petsList.forEach(pet => {
           // if (pet.favorite.filter(item => item === userE.uid).length > 0) {
           pet.favorite.forEach(item => {
-            if (item === userE.uid) {
+            if (item.userIdSol === userE.uid) {
               petFavoritados.push(pet);
             }
           });
