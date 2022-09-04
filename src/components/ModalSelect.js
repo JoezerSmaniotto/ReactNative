@@ -30,6 +30,7 @@ const ModalSelect = ({
     useState(false);
   const [racaSelecionadaPet, setRacaSelecionadaPet] = useState('');
   const [apresentaCriarNovaRaca, setApresentaCriarNovaRaca] = useState(false);
+  const [racasFilterPet, setRacasFilterPet] = useState([]);
   const {theme} = useTheme();
 
   useEffect(() => {
@@ -37,9 +38,14 @@ const ModalSelect = ({
     // eslint-disable-next-line
   }, []);
 
-  // useEffect(() => {
-  //   console.log('racasList: ', racasList);
-  // }, [racasList]);
+  useEffect(() => {
+    if (racasList.length > 0 && (tipoPet === 1 || tipoPet === 0)) {
+      const petFiltradoTipo = racasList.filter(racaPet => {
+        return racaPet.tipoPet === tipoPet;
+      });
+      setRacasFilterPet(petFiltradoTipo);
+    }
+  }, [tipoPet, racasList]);
 
   useEffect(() => {
     if (racaDoPet.length > 0) {
@@ -153,9 +159,9 @@ const ModalSelect = ({
           <ScrollView style={{flex: 1}} showsVerticalScrollIndicator={false}>
             {/* horizontal={true} */}
             <>
-              {racasList.length > 0 &&
+              {racasFilterPet.length > 0 &&
                 apresentaCriarNovaRaca === false &&
-                racasList.map((raca, index) => {
+                racasFilterPet.map((raca, index) => {
                   return (
                     <RadioButton
                       key={`${index}${raca.uid}`}

@@ -21,9 +21,9 @@ const ModalSelectFilter = ({visible, setVisible, tipoPet, setaRaca, raca}) => {
   }, []);
 
   useEffect(() => {
-    if ((racasList.length > 0 && tipoPet === 1) || tipoPet === 0) {
-      const petFiltradoTipo = racasList.filter(raca => {
-        return raca.tipoPet === tipoPet;
+    if (racasList.length > 0 && (tipoPet === 1 || tipoPet === 0)) {
+      const petFiltradoTipo = racasList.filter(racaPet => {
+        return racaPet.tipoPet === tipoPet;
       });
       setRacasFilterPet(petFiltradoTipo);
     }
