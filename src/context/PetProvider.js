@@ -82,7 +82,7 @@ export const PetProvider = ({children}) => {
       .then(() => {
         showToast('Pet salvo!');
         retorno();
-        // getPets();
+        getPets();
       })
       .catch(e => {
         console.error('PetProvider, savePet: ' + e);
