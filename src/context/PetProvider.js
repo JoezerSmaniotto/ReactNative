@@ -131,7 +131,7 @@ export const PetProvider = ({children}) => {
     if (uid !== '' || uid !== null) {
       Alert.alert(
         'Aviso',
-        'Deseja excluir o pet ?',
+        'Deseja excluir o Pet ?',
         [
           {
             text: 'Sim',
