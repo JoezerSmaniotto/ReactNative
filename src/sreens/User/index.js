@@ -52,6 +52,21 @@ const User = ({route, navigation}) => {
       },
     ]);
   };
+
+  const handlerExit = () => {
+    Alert.alert('ATENÇÃO', 'Tem certeza que deseja sair do App?', [
+      {
+        text: 'SIM',
+        onPress: () => signOut(),
+      },
+      {
+        text: 'NÃO',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+    ]);
+  };
+
   useEffect(() => {
     if (userE) {
       setNome(userE.nome);
@@ -96,44 +111,45 @@ const User = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <View style={styles.superior}>
-          <Text h2>Edição Usuário</Text>
-          <Input
-            placeholder="Nome Completo"
-            onChangeText={t => setNome(t)}
-            keyboardType="default"
-            leftIcon={{type: 'font-awesome', name: 'user'}}
-            value={nome}
-            disabled={disabled}
-          />
-          <Input
-            placeholder="Email"
-            onChangeText={t => setEmail(t)}
-            keyboardType="email-address"
-            leftIcon={{type: 'font-awesome', name: 'envelope'}}
-            value={email}
-            disabled={true}
-          />
-          <Input
-            placeholder="53-99999-9999"
-            onChangeText={t => setTel(t)}
-            keyboardType="numeric"
-            leftIcon={{type: 'font-awesome', name: 'phone'}}
-            value={tel}
-            disabled={disabled}
-          />
+      <View style={styles.superior}>
+        <Text h4>EDIÇÃO DO USUÁRIO</Text>
+      </View>
+      <View style={styles.conteudo}>
+        <Input
+          placeholder="Nome Completo"
+          onChangeText={t => setNome(t)}
+          keyboardType="default"
+          leftIcon={{type: 'font-awesome', name: 'user'}}
+          value={nome}
+          disabled={disabled}
+        />
+        <Input
+          placeholder="Email"
+          onChangeText={t => setEmail(t)}
+          keyboardType="email-address"
+          leftIcon={{type: 'font-awesome', name: 'envelope'}}
+          value={email}
+          disabled={true}
+        />
+        <Input
+          placeholder="53-99999-9999"
+          onChangeText={t => setTel(t)}
+          keyboardType="numeric"
+          leftIcon={{type: 'font-awesome', name: 'phone'}}
+          value={tel}
+          disabled={disabled}
+        />
 
-          <MeuButton
-            texto={disabled ? 'Editar' : 'Salvar'}
-            onClick={() => (disabled ? handlerEdit() : setDisabled(!disabled))}
-          />
+        <MeuButton
+          texto={disabled ? 'Editar' : 'Salvar'}
+          onClick={() => (disabled ? handlerEdit() : setDisabled(!disabled))}
+        />
 
-          <MeuButton texto="Excluir Conta" onClick={handlerSelfDestruct} />
+        <MeuButton texto="Excluir Conta" onClick={handlerSelfDestruct} />
 
-          <MeuButton texto="SAIR" onClick={() => signOut()} />
-        </View>
-      </ScrollView>
+        <MeuButton texto="Sair" onClick={() => handlerExit()} />
+      </View>
+
       {loading && <Loading />}
     </SafeAreaView>
   );
@@ -143,27 +159,33 @@ export default User;
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'row',
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: 20,
     backgroundColor: '#F5F5F5',
   },
 
   superior: {
-    flex: 1,
-    margin: 8,
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-start',
+    backgroundColor: '#e5e5e5',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.22,
     shadowRadius: 2.22,
-    elevation: 2,
+    elevation: 3,
+    borderRadius: 8,
+    paddingLeft: 8,
+    paddingTop: 13,
+    paddingBottom: 13,
+  },
+
+  conteudo: {
+    paddingTop: 20,
   },
 
   input: {
