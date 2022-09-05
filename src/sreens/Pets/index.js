@@ -123,7 +123,7 @@ const Pets = ({navigation}) => {
             onPress={() => setOpenModalFilterPet(!openModalFilterPet)}
             underlayColor="#e5e5e5">
             <>
-              <Text h4 h3Style={{color: theme.colors.black}}>
+              <Text h4 h4Style={{color: theme.colors.black}}>
                 FILTRAR PETS
               </Text>
               <Button
