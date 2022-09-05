@@ -14,11 +14,18 @@ const SignUp = ({navigation}) => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
+  const [phone, setPhone] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
   const [loading, setLoading] = useState(false);
 
   const cadastrar = () => {
-    if (nome !== '' && email !== '' && pass !== '' && confirmPass !== '') {
+    if (
+      nome !== '' &&
+      email !== '' &&
+      pass !== '' &&
+      confirmPass !== '' &&
+      phone !== ''
+    ) {
       if (pass === confirmPass) {
         // CRIA USUÁRIO NO firebase com  createUserWithEmailAndPassword
         // como o nome diz com E-mail e Senha
@@ -32,6 +39,7 @@ const SignUp = ({navigation}) => {
             let user = {};
             user.nome = nome;
             user.email = email;
+            user.tel = phone;
             firestore()
               .collection('users') // Refêrencia da coleção
               .doc(userF.uid) // Chave do documentos IDENTICADOS UID.
@@ -159,6 +167,13 @@ const SignUp = ({navigation}) => {
             // onEndEditing={() => cadastrar()}
           />
 
+          <Input
+            placeholder="53-99999-9999"
+            onChangeText={t => setPhone(t)}
+            keyboardType="numeric"
+            leftIcon={{type: 'font-awesome', name: 'phone'}}
+          />
+
           <MeuButton texto="ENTRAR" onClick={cadastrar} />
         </View>
       </ScrollView>
@@ -178,8 +193,9 @@ const styles = StyleSheet.create({
   },
   div: {
     marginTop: 30,
-    // backgroundColor: 'blue',
-    width: '95%',
+    width: '100%',
+    paddingLeft: '5%',
+    paddingRight: '5%',
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -18,6 +18,7 @@ const User = ({route, navigation}) => {
 
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
+  const [tel, setTel] = useState('');
   const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
@@ -55,6 +56,7 @@ const User = ({route, navigation}) => {
     if (userE) {
       setNome(userE.nome);
       setEmail(userE.email);
+      setTel(userE.tel);
     }
   }, [userE]);
 
@@ -69,6 +71,7 @@ const User = ({route, navigation}) => {
         uid: userE.uid,
         nome: nome,
         email: userE.email,
+        tel: tel,
       };
       if (!disabled) {
         await updateUser(userUpdate);
@@ -111,6 +114,14 @@ const User = ({route, navigation}) => {
             leftIcon={{type: 'font-awesome', name: 'envelope'}}
             value={email}
             disabled={true}
+          />
+          <Input
+            placeholder="53-99999-9999"
+            onChangeText={t => setTel(t)}
+            keyboardType="numeric"
+            leftIcon={{type: 'font-awesome', name: 'phone'}}
+            value={tel}
+            disabled={disabled}
           />
 
           <MeuButton

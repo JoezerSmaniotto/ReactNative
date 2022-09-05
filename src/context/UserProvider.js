@@ -35,6 +35,7 @@ export const UserProvider = ({children}) => {
       let userLogado = {
         nome: response.data.fields.nome.stringValue,
         email: response.data.fields.email.stringValue,
+        tel: response.data.fields.tel.stringValue,
         uid: id[1],
       };
       // // });
@@ -75,6 +76,7 @@ export const UserProvider = ({children}) => {
         fields: {
           nome: {stringValue: val.nome},
           email: {stringValue: userE.email},
+          tel: {stringValue: userE.tel},
         },
       });
       showToast('Dados salvos.');
