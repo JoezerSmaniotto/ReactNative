@@ -67,15 +67,9 @@ const Pets = ({navigation}) => {
             onPress={() => {}}
             underlayColor="#e5e5e5">
             <>
-              <Text h4 h3Style={{color: theme.colors.black}}>
+              <Text h4 h4Style={{color: theme.colors.black}}>
                 NOTIFICAÇÕES
               </Text>
-              <MaterialIcons
-                name="notifications-none"
-                color={theme.colors.primary}
-                size={35}
-                style={styles.iconNotificate}
-              />
             </>
           </View>
           <ScrollView style={{flex: 1}}>
@@ -144,6 +138,8 @@ const styles = StyleSheet.create({
     elevation: 3,
     borderRadius: 8,
     paddingLeft: 8,
+    paddingTop: 13,
+    paddingBottom: 13,
   },
   buttonStyle: {
     backgroundColor: 'transparent',
