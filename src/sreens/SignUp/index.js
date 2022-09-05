@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingTop: 20,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#F5F5F5',
   },
   div: {
     marginTop: 30,

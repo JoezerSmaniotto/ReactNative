@@ -148,8 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // paddingTop: 20,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#F5F5F5',
   },
 
   superior: {
@@ -165,9 +164,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 2.22,
     elevation: 2,
-
-    // boxShadow:
-    // '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
   },
 
   input: {
