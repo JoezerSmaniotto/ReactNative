@@ -7,7 +7,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ModalViewPet from './ModalViewPet';
 import {PetContext} from '../context/PetProvider';
 
-const CardPet = ({dadosPet, user}) => {
+const CardPetList = ({dadosPet, user}) => {
   const {theme} = useTheme();
   const {favoritePetContext} = useContext(PetContext);
   const [openModalPetView, setOpenModalPetView] = useState(false);
@@ -116,7 +116,7 @@ const CardPet = ({dadosPet, user}) => {
   );
 };
 
-export default CardPet;
+export default CardPetList;
 
 const styles = StyleSheet.create({
   buttonStyle: {
