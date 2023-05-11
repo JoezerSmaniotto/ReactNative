@@ -80,9 +80,9 @@ export const PetProvider = ({children}) => {
         {merge: true},
       )
       .then(() => {
-        showToast('Dados salvos.');
+        showToast('Pet salvo!');
         retorno();
-        // getPets();
+        getPets();
       })
       .catch(e => {
         console.error('PetProvider, savePet: ' + e);
@@ -100,7 +100,7 @@ export const PetProvider = ({children}) => {
         {merge: true},
       )
       .then(() => {
-        showToast('Favoritos atualizados.');
+        showToast('Favoritos atualizados!');
         getPets();
       })
       .catch(e => {
@@ -108,11 +108,30 @@ export const PetProvider = ({children}) => {
       });
   };
 
+  const solicitaContatoDonoPetContext = async (idPet, favorite) => {
+    await firestore()
+      .collection('pets')
+      .doc(idPet)
+      .set(
+        {
+          favorite: favorite,
+        },
+        {merge: true},
+      )
+      .then(() => {
+        showToast('Solicitação atualizada!');
+        getPets();
+      })
+      .catch(e => {
+        console.error('PetProvider, solicitaContatoDonoPetContext: ' + e);
+      });
+  };
+
   const deletePet = async uid => {
     if (uid !== '' || uid !== null) {
       Alert.alert(
         'Aviso',
-        'Deseja excluir o pet ?',
+        'Deseja excluir o Pet ?',
         [
           {
             text: 'Sim',
@@ -122,7 +141,7 @@ export const PetProvider = ({children}) => {
                 .doc(uid)
                 .delete()
                 .then(() => {
-                  showToast('Pet excluído.');
+                  showToast('Pet excluído!');
                 })
                 .catch(error => {
                   console.error('PetProvider, deletePet: ', error);
@@ -146,6 +165,7 @@ export const PetProvider = ({children}) => {
         petsList,
         getPets,
         favoritePetContext,
+        solicitaContatoDonoPetContext,
       }}>
       {children}
     </PetContext.Provider>

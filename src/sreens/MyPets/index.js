@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect, useContext} from 'react';
 import ImageResizer from 'react-native-image-resizer';
 import {
@@ -153,17 +154,6 @@ const MyPets = ({navigation}) => {
     }
   };
 
-  // const deletePet = async () => {
-  //   console.log('sendDados: ', sendDados);
-  //   await savePet(dadosPet, userE, () => {
-  //     setVisible(true);
-  //   });
-
-  // };
-
-  // const editar = useCallback(async () => {
-  // }, [disabled, nome, email]);
-
   const openCard = dados => {
     setDadosPet({
       uid: dados.uid,
@@ -282,14 +272,15 @@ const MyPets = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{width: '100%'}}>
+      <View style={styles.superior}>
         <Text
-          h3
+          h4
           style={{textAlign: 'center'}}
-          h3Style={{color: theme.colors.black}}>
-          Seus Pets
+          h4Style={{color: theme.colors.black}}>
+          MEUS PETS
         </Text>
-
+      </View>
+      <View style={{width: '100%'}}>
         <Input
           placeholder="Pequise por nome"
           onChangeText={t => pesquisaPetPorNome(t)}
@@ -421,21 +412,6 @@ const MyPets = ({navigation}) => {
                 }}
                 containerStyle={{marginBottom: 15}}
               />
-              {/* <Text>Raça</Text>
-              <Picker
-                selectedValue={dadosPet.raca}
-                onValueChange={(itemValue, itemIndex) =>
-                  onchangeDados({raca: itemValue})
-                }>
-                <Picker.Item label="PitBull" value="pitBull" />
-                <Picker.Item label="Vira-Lata" value="viraLata" />
-                <Picker.Item label="Poodle" value="poodle" />
-                <Picker.Item label="Buldogue" value="buldogue" />
-                <Picker.Item label="Golden Retriever" value="goldenRetriever" />
-              </Picker> */}
-              {/* <Text onPress={() => setOpenModalSelect(true)} style={styles.text}>
-                Raça
-              </Text> */}
               <Text
                 style={{
                   marginLeft: 8,
@@ -448,18 +424,6 @@ const MyPets = ({navigation}) => {
               <Texto onPress={() => setOpenModalSelect(true)}>
                 {dadosPet.raca}
               </Texto>
-              {/* <Input
-                label="Raça"
-                placeholder="Informe a raça"
-                onChangeText={e => onchangeDados({raca: e})}
-                keyboardType="numeric"
-                value={dadosPet.raca}
-                style={{width: '100%'}}
-                onPress={() => setOpenModalSelect(true)}
-                // leftIcon={{type: 'font-awesome', name: 'envelope'}}
-                // returnKeyType="next"
-                // onEndEditing={() => this.passTextInput.focus()}
-              /> */}
               <Input
                 label="Informações Adicionais"
                 placeholder="Informe o que você jugla relegante saber"
@@ -471,30 +435,6 @@ const MyPets = ({navigation}) => {
                 // returnKeyType="next"
                 // onEndEditing={() => this.passTextInput.focus()}
               />
-
-              {/* <Input
-                label="Latitude"
-                placeholder="Longitude em decimal"
-                onChangeText={e => onchangeDados({latitude: e})}
-                keyboardType="numeric"
-                value={dadosPet.latitude}
-                style={{width: '100%'}}
-                // leftIcon={{type: 'font-awesome', name: 'envelope'}}
-                // returnKeyType="next"
-                // onEndEditing={() => this.passTextInput.focus()}
-              /> */}
-
-              {/* <Input
-                label="Longitude"
-                placeholder="Longitude em decimal"
-                onChangeText={e => onchangeDados({longitude: e})}
-                keyboardType="numeric"
-                value={dadosPet.longitude}
-                style={{width: '100%'}}
-                // leftIcon={{type: 'font-awesome', name: 'envelope'}}
-                // returnKeyType="next"
-                // onEndEditing={() => this.passTextInput.focus()}
-              /> */}
 
               <Button
                 title={
@@ -560,13 +500,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    padding: 20,
   },
-  divSuperior: {
-    flex: 1,
+  superior: {
+    flexDirection: 'row',
     width: '100%',
     alignItems: 'center',
-    marginTop: 20,
-    backgroundColor: 'blue',
+    justifyContent: 'flex-start',
+    backgroundColor: '#e5e5e5',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
+    borderRadius: 8,
+    paddingLeft: 8,
+    paddingTop: 13,
+    paddingBottom: 13,
   },
   texto: {
     color: COLORS.primary,
@@ -594,12 +548,10 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   input: {
-    width: '95%',
+    width: '100%',
     height: 50,
-    borderBottomColor: COLORS.grey,
-    borderBottomWidth: 2,
+    borderBottomColor: 'grey',
+    borderBottomWidth: 1,
     fontSize: 16,
-    paddingLeft: 2,
-    paddingBottom: 1,
   },
 });

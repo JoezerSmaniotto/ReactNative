@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
+    backgroundColor: '#F5F5F5',
   },
   divSuperior: {
     flex: 5,

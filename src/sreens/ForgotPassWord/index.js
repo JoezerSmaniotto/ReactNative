@@ -73,12 +73,11 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     alignItems: 'center',
-    // backgroundColor: 'red',
     flex: 1,
+    backgroundColor: '#F5F5F5',
   },
   div: {
     marginTop: 30,
-    // backgroundColor: 'blue',
     width: '95%',
     alignItems: 'center',
     justifyContent: 'center',

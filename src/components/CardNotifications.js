@@ -1,42 +1,77 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import {StyleSheet, Image, View, Alert} from 'react-native';
-import {Text, Button, useTheme} from 'react-native-elements';
-
+import React, {useState, useContext} from 'react';
+import {View, StyleSheet, Alert} from 'react-native';
+import {Image, Text, Button, useTheme} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {PetContext} from '../context/PetProvider';
 
-const CardPet = ({deletePet, dados, open}) => {
+const CardNotifications = ({dadosPet, idUserCont}) => {
   const {theme} = useTheme();
+  const {solicitaContatoDonoPetContext} = useContext(PetContext);
+  const [openModalPetView, setOpenModalPetView] = useState(false);
 
-  const handlerEditPet = () => {
-    Alert.alert('ATENÇÃO', 'Tem certeza que deseja editar este Pet?', [
-      {
-        text: 'SIM',
-        onPress: () => open(),
-      },
-      {
-        text: 'NÃO',
-        onPress: () => {},
-        style: 'cancel',
-      },
-    ]);
+  const contactRequest = status => {
+    let indexData = dadosPet.favorite.findIndex(
+      item => item.userIdSol === idUserCont,
+    );
+    let newfavorite = dadosPet.favorite;
+    if (indexData !== -1) {
+      if (status) {
+        newfavorite[indexData].status = 'a';
+        solicitaContatoDonoPetContext(dadosPet.uid, newfavorite);
+      } else {
+        newfavorite[indexData].status = 'r';
+        solicitaContatoDonoPetContext(dadosPet.uid, newfavorite);
+      }
+    }
+  };
+
+  const confirmContact = () => {
+    Alert.alert(
+      'ATENÇÃO',
+      'Tem certeza que deseja liberar seu contato para o usuario solicitante ?',
+      [
+        {
+          text: 'SIM',
+          onPress: () => contactRequest(true),
+        },
+        {
+          text: 'NÃO',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ],
+    );
+  };
+
+  const rejectContact = () => {
+    Alert.alert(
+      'ATENÇÃO',
+      'Tem certeza que não deseja liberar seu  contato para o usuario solicitante ?',
+      [
+        {
+          text: 'SIM',
+          onPress: () => contactRequest(false),
+        },
+        {
+          text: 'NÃO',
+          onPress: () => {},
+          style: 'cancel',
+        },
+      ],
+    );
   };
 
   return (
-    <View style={styles.cardPet}>
+    <View style={styles.cardPet} underlayColor="#e5e5e5">
       <>
         <View style={styles.cardPetImg}>
           <Image
             // resizeMode="center" // Contain
             style={styles.image}
             source={{
-              uri:
-                dados.imagemPet !== ''
-                  ? dados.imagemPet
-                  : 'https://i0.statig.com.br/bancodeimagens/br/4j/48/br4j4845bvi3ygylo5wnhk84v.jpg',
+              uri: dadosPet.imagemPet,
             }}
             accessibilityLabel="logo do pet"
           />
@@ -49,16 +84,16 @@ const CardPet = ({deletePet, dados, open}) => {
               numberOfLines={1}
               style={{textAlign: 'center'}}
               h4Style={theme.colors.black}>
-              {dados.nome}
+              {dadosPet.nome}
             </Text>
             <Text
               ellipsizeMode="tail"
               numberOfLines={1}
               style={styles.textRaca}>
-              {dados.raca}
+              {dadosPet.raca}
             </Text>
             <FontAwesome
-              name={dados.sexo === 0 ? 'mars' : 'venus'}
+              name={dadosPet.sexo === 0 ? 'mars' : 'venus'}
               color={theme.colors.primary}
               size={18}
               style={{alignSelf: 'center'}}
@@ -67,30 +102,25 @@ const CardPet = ({deletePet, dados, open}) => {
           <View style={styles.cardPetInfoActions}>
             <Button
               icon={
-                <MaterialCommunityIcons
-                  name="trash-can-outline"
+                <MaterialIcons
+                  name="close"
                   color={theme.colors.primary}
                   size={30}
                 />
               }
-              onPress={() => {
-                deletePet();
-              }}
+              onPress={() => rejectContact()}
               type={'solid'}
               buttonStyle={styles.buttonActionCard}
-              containerStyle={styles.buttoncontainerStyle}
             />
             <Button
               icon={
                 <MaterialIcons
-                  name="edit"
+                  name="check"
                   color={theme.colors.primary}
                   size={30}
                 />
               }
-              onPress={() => {
-                handlerEditPet();
-              }}
+              onPress={() => confirmContact()}
               type={'solid'}
               buttonStyle={styles.buttonActionCard}
               containerStyle={styles.buttoncontainerStyle}
@@ -102,7 +132,7 @@ const CardPet = ({deletePet, dados, open}) => {
   );
 };
 
-export default CardPet;
+export default CardNotifications;
 
 const styles = StyleSheet.create({
   buttonStyle: {
@@ -112,7 +142,7 @@ const styles = StyleSheet.create({
   },
 
   buttoncontainerStyle: {
-    marginLeft: 20,
+    marginLeft: 5,
   },
 
   cardPet: {
@@ -154,7 +184,7 @@ const styles = StyleSheet.create({
   cardPetInfoActions: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
   buttonActionCard: {

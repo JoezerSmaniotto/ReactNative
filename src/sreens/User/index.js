@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useContext, useEffect, useState, useCallback} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Text} from 'react-native-elements';
 import {COLORS} from '../../assets/colors';
-import {SafeAreaView, StyleSheet, ScrollView, View} from 'react-native';
+import {SafeAreaView, StyleSheet, ScrollView, View, Alert} from 'react-native';
 import {UserContext} from '../../context/UserProvider';
 import {AuthUserContext} from '../../context/AuthUserProvider';
-import auth from '@react-native-firebase/auth';
+import Loading from '../../components/Loading';
 import MeuButton from '../../components/MeuButton';
 
 import {Input} from 'react-native-elements';
@@ -18,19 +18,60 @@ const User = ({route, navigation}) => {
 
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
-  const [pass, setPass] = useState('');
+  const [tel, setTel] = useState('');
+  const [loading, setLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
   const fetchData = async () => {
     await getUser();
   };
 
+  const handlerSelfDestruct = () => {
+    Alert.alert('ATENÇÃO', 'Tem certeza que deseja excluir a sua conta?', [
+      {
+        text: 'SIM',
+        onPress: () => excluir(),
+      },
+      {
+        text: 'NÃO',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+    ]);
+  };
+  const handlerEdit = () => {
+    Alert.alert('ATENÇÃO', 'Tem certeza que deseja editar a sua conta?', [
+      {
+        text: 'SIM',
+        onPress: () => editar(),
+      },
+      {
+        text: 'NÃO',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+    ]);
+  };
+
+  const handlerExit = () => {
+    Alert.alert('ATENÇÃO', 'Tem certeza que deseja sair do App?', [
+      {
+        text: 'SIM',
+        onPress: () => signOut(),
+      },
+      {
+        text: 'NÃO',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+    ]);
+  };
+
   useEffect(() => {
     if (userE) {
-      // console.log('############# E F E C T ##################');
-      // console.log('-----------User--------: ', userE);
       setNome(userE.nome);
       setEmail(userE.email);
+      setTel(userE.tel);
     }
   }, [userE]);
 
@@ -45,33 +86,19 @@ const User = ({route, navigation}) => {
         uid: userE.uid,
         nome: nome,
         email: userE.email,
+        tel: tel,
       };
       if (!disabled) {
         await updateUser(userUpdate);
       }
     }
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   setDisabled(true);
+    // }, 400);
   };
 
-  // const editar = useCallback(async () => {
-  //   // console.log('-- -- -- EDITAR -- -- --');
-  //   // console.log('NOME => ', nome);
-  //   // console.log('email => ', email);
-  //   // console.log('----------');
-  //   setDisabled(!disabled);
-  //   if (userE.nome !== nome) {
-  //     let userUpdate = {
-  //       uid: userE.uid,
-  //       nome: nome,
-  //       email: userE.email,
-  //     };
-  //     if (!disabled) {
-  //       await updateUser(userUpdate);
-  //     }
-  //   }
-  // }, [disabled, nome, email]);
-
   const excluir = async () => {
-    console.log('-- -- -- Exlcuir Conta -- -- --');
     await deleteUser(userE.uid);
     AsyncStorage.removeItem('user'); // deleta na cache
     navigation.dispatch(
@@ -84,61 +111,46 @@ const User = ({route, navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
-        <View style={styles.superior}>
-          <Text h2>Edição Usuário</Text>
-          <Input
-            // label="Nome Completo"
-            placeholder="Nome Completo"
-            onChangeText={t => setNome(t)}
-            keyboardType="default"
-            leftIcon={{type: 'font-awesome', name: 'user'}}
-            value={nome}
-            disabled={disabled}
+      <View style={styles.superior}>
+        <Text h4>EDIÇÃO DO USUÁRIO</Text>
+      </View>
+      <View style={styles.conteudo}>
+        <Input
+          placeholder="Nome Completo"
+          onChangeText={t => setNome(t)}
+          keyboardType="default"
+          leftIcon={{type: 'font-awesome', name: 'user'}}
+          value={nome}
+          disabled={disabled}
+        />
+        <Input
+          placeholder="Email"
+          onChangeText={t => setEmail(t)}
+          keyboardType="email-address"
+          leftIcon={{type: 'font-awesome', name: 'envelope'}}
+          value={email}
+          disabled={true}
+        />
+        <Input
+          placeholder="53-99999-9999"
+          onChangeText={t => setTel(t)}
+          keyboardType="numeric"
+          leftIcon={{type: 'font-awesome', name: 'phone'}}
+          value={tel}
+          disabled={disabled}
+        />
 
-            // style={styles.input}
-            // returnKeyType="next"
-            // onEndEditing={() => this.emailTextInput.focus()}
-          />
+        <MeuButton
+          texto={disabled ? 'Editar' : 'Salvar'}
+          onClick={() => (disabled ? handlerEdit() : setDisabled(!disabled))}
+        />
 
-          <Input
-            // ref={ref => {
-            //   this.emailTextInput = ref;
-            // }}
-            // label="Email"
-            placeholder="Email"
-            onChangeText={t => setEmail(t)}
-            keyboardType="email-address"
-            leftIcon={{type: 'font-awesome', name: 'envelope'}}
-            value={email}
-            // disabled={true}
-            // style={styles.input}
-            // returnKeyType="next"
-            // onEndEditing={() => this.passTextInput.focus()}
-          />
-          {/* <Input
-            // ref={ref => {
-            //   this.passTextInput = ref; // recebe a referencia
-            // }}
-            // label="Senha"
-            placeholder="Senha"
-            onChangeText={t => setPass(t)}
-            keyboardType="default"
-            leftIcon={{type: 'font-awesome', name: 'lock'}}
-            value={pass}
-            // style={styles.input}
-            // returnKeyType="next"
-            // onEndEditing={() => this.confirPassTextInput.focus()}
-          /> */}
+        <MeuButton texto="Excluir Conta" onClick={handlerSelfDestruct} />
 
-          <MeuButton texto={disabled ? 'Editar' : 'Salvar'} onClick={editar} />
+        <MeuButton texto="Sair" onClick={() => handlerExit()} />
+      </View>
 
-          <MeuButton texto="Excluir Conta" onClick={excluir} />
-
-          <MeuButton texto="SAIR" onClick={() => signOut()} />
-        </View>
-      </ScrollView>
-      {/* {loading && <Loading />} */}
+      {loading && <Loading />}
     </SafeAreaView>
   );
 };
@@ -147,31 +159,33 @@ export default User;
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    flexDirection: 'row',
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // paddingTop: 20,
-    backgroundColor: COLORS.white,
+    justifyContent: 'flex-start',
+    padding: 20,
+    backgroundColor: '#F5F5F5',
   },
 
   superior: {
-    flex: 1,
-    margin: 8,
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-start',
+    backgroundColor: '#e5e5e5',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 1,
     },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.22,
     shadowRadius: 2.22,
-    elevation: 2,
+    elevation: 3,
+    borderRadius: 8,
+    paddingLeft: 8,
+    paddingTop: 13,
+    paddingBottom: 13,
+  },
 
-    // boxShadow:
-    // '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)',
+  conteudo: {
+    paddingTop: 20,
   },
 
   input: {

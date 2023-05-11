@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useEffect, useContext} from 'react';
-import {StyleSheet, View, Alert} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import styled from 'styled-components/native';
 

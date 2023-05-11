@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 20,
-    backgroundColor: COLORS.white,
+    backgroundColor: '#F5F5F5',
   },
 
   image: {

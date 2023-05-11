@@ -1,117 +1,122 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useContext} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableHighlight} from 'react-native';
 import {Image, Text, Button, useTheme} from 'react-native-elements';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ModalViewPet from './ModalViewPet';
 import {PetContext} from '../context/PetProvider';
 
-const CardPet = ({dadosPet, user}) => {
+const CardPetList = ({dadosPet, user}) => {
   const {theme} = useTheme();
   const {favoritePetContext} = useContext(PetContext);
   const [openModalPetView, setOpenModalPetView] = useState(false);
 
   const favoritePet = () => {
-    if (dadosPet.favorite.filter(item => item === user.uid).length > 0) {
+    if (
+      dadosPet.favorite.filter(item => item.userIdSol === user.uid).length > 0
+    ) {
       let removeUserFavorite = dadosPet.favorite.filter(
-        item => item !== user.uid,
+        item => item.userIdSol !== user.uid,
       );
       favoritePetContext(dadosPet.uid, removeUserFavorite);
     } else {
       let addUserFavorite = dadosPet.favorite;
-      addUserFavorite.push(user.uid);
+      addUserFavorite.push({userIdSol: user.uid, status: 's'});
       favoritePetContext(dadosPet.uid, addUserFavorite);
     }
   };
 
   return (
-    <View style={styles.cardPet}>
-      <View style={styles.cardPetImg}>
-        <Image
-          // resizeMode="center" // Contain
-          style={styles.image}
-          source={{
-            uri: dadosPet.imagemPet,
-          }}
-          accessibilityLabel="logo do app"
-        />
-      </View>
-      <View style={styles.cardPetInfo}>
-        <View style={styles.cardPetInfoDetails}>
-          <Text
-            h4
-            ellipsizeMode="tail"
-            numberOfLines={1}
-            style={{textAlign: 'center'}}
-            h4Style={theme.colors.black}>
-            {dadosPet.nome}
-          </Text>
-          <Text ellipsizeMode="tail" numberOfLines={1} style={styles.textRaca}>
-            {dadosPet.raca}
-          </Text>
-        </View>
-        <View style={styles.cardPetInfoActions}>
-          {user.uid !== dadosPet.donoPet.uid &&
-            (dadosPet.favorite.filter(item => item === user.uid).length > 0 ? (
-              <>
-                <Button
-                  icon={
-                    <MaterialIcons
-                      name="favorite"
-                      color={theme.colors.primary}
-                      size={30}
-                    />
-                  }
-                  onPress={favoritePet}
-                  type={'solid'}
-                  buttonStyle={styles.buttonActionCard}
-                  containerStyle={styles.buttoncontainerStyle}
-                />
-              </>
-            ) : (
-              <>
-                <Button
-                  icon={
-                    <MaterialIcons
-                      name="favorite-border"
-                      color={theme.colors.primary}
-                      size={30}
-                    />
-                  }
-                  onPress={favoritePet}
-                  type={'solid'}
-                  buttonStyle={styles.buttonActionCard}
-                  containerStyle={styles.buttoncontainerStyle}
-                />
-              </>
-            ))}
-          <Button
-            icon={
-              <MaterialIcons
-                name="search"
-                color={theme.colors.primary}
-                size={30}
-                onPress={() => {
-                  setOpenModalPetView(true);
-                }}
-              />
-            }
-            type={'solid'}
-            buttonStyle={styles.buttonActionCard}
-            containerStyle={styles.buttoncontainerStyle}
+    <TouchableHighlight
+      style={styles.cardPet}
+      onPress={() => setOpenModalPetView(true)}
+      underlayColor="#e5e5e5">
+      <>
+        <View style={styles.cardPetImg}>
+          <Image
+            // resizeMode="center" // Contain
+            style={styles.image}
+            source={{
+              uri: dadosPet.imagemPet,
+            }}
+            accessibilityLabel="logo do pet"
           />
         </View>
-      </View>
+        <View style={styles.cardPetInfo}>
+          <View style={styles.cardPetInfoDetails}>
+            <Text
+              h4
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={{textAlign: 'center'}}
+              h4Style={theme.colors.black}>
+              {dadosPet.nome}
+            </Text>
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              style={styles.textRaca}>
+              {dadosPet.raca}
+            </Text>
+            <FontAwesome
+              name={dadosPet.sexo === 0 ? 'mars' : 'venus'}
+              color={theme.colors.primary}
+              size={18}
+              style={{alignSelf: 'center'}}
+            />
+          </View>
+          <View style={styles.cardPetInfoActions}>
+            {user.uid !== dadosPet.donoPet.uid &&
+              (dadosPet.favorite.filter(item => item.userIdSol === user.uid)
+                .length > 0 ? (
+                <>
+                  <Button
+                    icon={
+                      <MaterialIcons
+                        name="favorite"
+                        color={theme.colors.primary}
+                        size={30}
+                      />
+                    }
+                    onPress={favoritePet}
+                    type={'solid'}
+                    buttonStyle={styles.buttonActionCard}
+                    containerStyle={styles.buttoncontainerStyle}
+                  />
+                </>
+              ) : (
+                <>
+                  <Button
+                    icon={
+                      <MaterialIcons
+                        name="favorite-border"
+                        color={theme.colors.primary}
+                        size={30}
+                      />
+                    }
+                    onPress={favoritePet}
+                    type={'solid'}
+                    buttonStyle={styles.buttonActionCard}
+                    containerStyle={styles.buttoncontainerStyle}
+                  />
+                </>
+              ))}
+          </View>
+        </View>
 
-      <ModalViewPet
-        visible={openModalPetView}
-        setVisible={setOpenModalPetView}
-        dadosPet={dadosPet}
-      />
-    </View>
+        <ModalViewPet
+          visible={openModalPetView}
+          setVisible={setOpenModalPetView}
+          dadosPet={dadosPet}
+          user={user}
+        />
+      </>
+    </TouchableHighlight>
   );
 };
 
-export default CardPet;
+export default CardPetList;
 
 const styles = StyleSheet.create({
   buttonStyle: {

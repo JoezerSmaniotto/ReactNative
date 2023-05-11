@@ -16,14 +16,21 @@ const ModalSelectFilter = ({visible, setVisible, tipoPet, setaRaca, raca}) => {
   const {theme} = useTheme();
 
   useEffect(() => {
-    getRacaPets();
+    let isMounted = true;
+    if (isMounted) {
+      getRacaPets();
+    }
+    return () => {
+      // when component unmounts, set isMounted to false
+      isMounted = false;
+    };
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    if ((racasList.length > 0 && tipoPet === 1) || tipoPet === 0) {
-      const petFiltradoTipo = racasList.filter(raca => {
-        return raca.tipoPet === tipoPet;
+    if (racasList.length > 0 && (tipoPet === 1 || tipoPet === 0)) {
+      const petFiltradoTipo = racasList.filter(racaPet => {
+        return racaPet.tipoPet === tipoPet;
       });
       setRacasFilterPet(petFiltradoTipo);
     }
